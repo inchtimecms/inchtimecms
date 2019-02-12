@@ -25,7 +25,7 @@ class InitAdminUserSuperAdminFixtures extends Fixture
         /**@var UserEntity $admin **/
         $admin = $this->userManipulator->create("admin","admin","admin@admin.com",true,true);
 
-        $superAdminGroup = $this->groupEntityRepository->findOneBy(array("groupAlias"=>"superAdmin"));
+        $superAdminGroup = $this->groupEntityRepository->findOneBy(array("groupAlias"=>"super"));
         $admin->setUserPermissionGroupEntity($superAdminGroup);
         $manager->persist($admin);
         $manager->flush();
