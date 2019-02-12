@@ -1,2 +1,3 @@
 # inchtimecms
-基于symfony 4开发的一个类Drupal的内容管理系统。
+基于symfony 4开发的一个类似Drupal的内容管理系统，为了方便开发inchtimecms仅包含后台部分页面及功能。如果您需要快速开发您可以查看inchtimecms
+的对应示例并加以修改。
