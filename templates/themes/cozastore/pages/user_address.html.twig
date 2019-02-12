@@ -1,0 +1,150 @@
+{#用户账户模板#}
+
+{% extends 'themes/cozastore/base.html.twig' %}
+
+{% block title %}
+    我的账户-收货地址
+{% endblock %}
+
+{% block seo_meta %}
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+{% endblock %}
+
+{% block content %}
+    {% include 'themes/cozastore/header.html.twig' %}
+
+    <!-- breadcrumb -->
+    <div class="container">
+        <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+            <a href="index.html" class="stext-109 cl8 hov-cl1 trans-04">
+                首页
+                <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+            </a>
+
+            <span class="stext-109 cl4">
+				用户中心
+			</span>
+        </div>
+    </div>
+
+    <div class="bg0 p-t-20 p-b-85">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-lg-4 col-xl-4 m-lr-auto m-b-50">
+                    <div class="p-lr-20 p-t-10 p-b-40 m-l-25 m-r--38 m-lr-0-xl">
+                        <ul class="user_nav list-group">
+                            <li class="list-group-item">
+                                <a href="{{ path('user') }}">我的订单</a>
+                            </li>
+                            <li class="list-group-item"><a href="{{ path('user_profile') }}">个人资料</a></li>
+                            <li class="list-group-item"><a class="active" href="{{ path('user_address') }}">收货地址</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-lg-8 col-xl-8 m-lr-auto m-b-50">
+                    <div class="p-lr-20 p-t-10 p-b-40 m-l-40 m-r-40 m-lr-0-xl p-lr-15-sm">
+                        新增收货地址：
+                        <hr>
+                        <form action="{{ path('user_address_add') }}" method="post">
+                            <div class="form-group m-form__group">
+                                <label class="cl13 small">地址信息 *：（此处仅供演示，应增加联动效果）</label>
+                                <div class="col-lg-3 col-md-3 col-sm-12 d-inline-block row">
+                                    <select class="form-control" id="province" name="province" required="required">
+                                        <option>北京市</option><option>天津市</option><option>河北省</option><option>山西省</option><option>内蒙古自治区</option><option>辽宁省</option><option>吉林省</option><option>黑龙江省</option><option>上海市</option><option>江苏省</option><option>浙江省</option><option>安徽省</option><option>福建省</option><option>江西省</option><option>山东省</option><option>河南省</option><option>湖北省</option><option>湖南省</option><option>广东省</option><option>广西壮族自治区</option><option>海南省</option><option>重庆市</option><option>四川省</option><option>贵州省</option><option>云南省</option><option>西藏自治区</option><option>陕西省</option><option>甘肃省</option><option>青海省</option><option>宁夏回族自治区</option><option>新疆维吾尔自治区</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-12 d-inline-block row">
+                                    <select class="form-control" id="city" name="city" required="required">
+                                        <option>市辖区</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-12 d-inline-block row">
+                                    <select class="form-control" id="district" name="district" required="required">
+                                        <option>东城区</option><option>西城区</option><option>朝阳区</option><option>丰台区</option><option>石景山区</option><option>海淀区</option><option>门头沟区</option><option>房山区</option><option>通州区</option><option>顺义区</option><option>昌平区</option><option>大兴区</option><option>怀柔区</option><option>平谷区</option><option>密云区</option><option>延庆区</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group m-form__group">
+                                <label class="cl13 small">详细地址 *：</label>
+                                <input type="text" class="form-control" name="address" required="required" placeholder="请输入详细地址信息，如道路、门牌号、小区、楼栋号、单元等信息">
+                            </div>
+                            <div class="form-group m-form__group">
+                                <label class="small">邮政编码：</label>
+                                <input type="text" class="form-control" name="zipcode" placeholder="请输入邮编">
+                            </div>
+                            <div class="form-group m-form__group">
+                                <label class="cl13 small">收货人姓名 *：</label>
+                                <input type="text" class="form-control" name="name" required="required" placeholder="">
+                            </div>
+                            <div class="form-group m-form__group">
+                                <label class="cl13 small">电话 *：</label>
+                                <input type="text" class="form-control" name="phone" required="required" placeholder="请输入电话号码">
+                            </div>
+                            <div class="form-group m-form__group form-inline">
+                                <label class="m-checkbox">
+                                    <input type="checkbox" name="set_default"> <small>是否设为默认地址</small>
+                                    <span></span>
+                                </label>
+                            </div>
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token("add_address") }}">
+                            <button class="btn btn-primary">保存</button>
+                        </form>
+
+
+                        <table class="table m-t-30">
+                            <thead class="thead-inverse">
+                            <tr>
+                                <th>收货人</th>
+                                <th>所在地区</th>
+                                <th>详细地址</th>
+                                <th>邮编</th>
+                                <th>电话</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for address in addressEntities %}
+                            <tr>
+                                <td>{{ address.consigneeName }}</td>
+                                <td>{{ address.province }} {{ address.city }} {{ address.district }}</td>
+                                <td>{{ address.addressInfo }}</td>
+                                <td>{{ address.zipcode }}</td>
+                                <td>{{ address.consigeneePhone }}</td>
+                                <td>
+                                    <a href="">修改</a>｜
+                                    <a href="">删除</a>
+                                    {% if address.boolDefault == false %}｜<a href="">设为默认</a>{% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    {% include 'themes/cozastore/footer.html.twig' %}
+{% endblock %}
+
+{% block base_javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/cozastore/js/address.js') }}"></script>
+    {#当前页面得把页头MENU背景改为白色，用jquery修改吧#}
+    <script>
+        $(document).ready(function(){
+            $("header").addClass("header-v4");
+
+            $('.js-show-cart').on('click',function(e){
+                window.location.href= $(e.target).data("cart");
+            });
+
+        });
+    </script>
+{% endblock %}

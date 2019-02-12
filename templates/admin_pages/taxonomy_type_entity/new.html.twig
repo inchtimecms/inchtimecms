@@ -1,0 +1,54 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}添加分类标签{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">添加分类标签</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <div class="col-md-12">
+
+        <!--begin::Portlet-->
+        <div class="m-portlet m-portlet--tab">
+            <!--begin::Form-->
+            <form class="m-form m-form--fit m-form--label-align-right"
+                  action={{ path("taxonomy_type_entity_add") }} method="POST">
+                <div class="m-portlet__body">
+                    <div class="form-group m-form__group">
+                        <label for="newTaxonomyTypeName">分类标签名称(必填)：</label>
+                        <input type="text" class="form-control m-input" required="required" id="newTaxonomyTypeName" name="newTaxonomyTypeName">
+                        <span class="m-form__help">输入分类标签的名称，请选择易理解的名称。</span>
+                    </div>
+                    <div class="form-group m-form__group">
+                        <label for="newTaxonomyTypeMachineAliasLabel" id="newTaxonomyTypeMachineAliasLabel">机器别名(必填,不可重复)：</label>
+                        <input type="text" class="form-control m-input" required="required" id="newTaxonomyTypeMachineAlias" name="newTaxonomyTypeMachineAlias">
+                    </div>
+                    <div class="form-group m-form__group">
+                        <label for="newTaxonomyTypeDescription">分类标签描述：</label>
+                        <textarea class="form-control m-input" id="newTaxonomyTypeDescription" rows="3" name="newTaxonomyTypeDescription"></textarea>
+                        <span class="m-form__help">输入分类标签的描述，简短说明下此标签下的词汇的主要分类。</span>
+                    </div>
+
+                </div>
+                <div class="m-portlet__foot m-portlet__foot--fit">
+                    <div class="m-form__actions">
+                        <button id="addNewContentTypeButton" class="btn btn-primary">确定并添加分类词汇</button>
+                    </div>
+                </div>
+            </form>
+            <!--end::Form-->
+        </div>
+
+        <!--end::Portlet-->
+
+    </div>
+
+{% endblock %}

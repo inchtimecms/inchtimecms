@@ -1,0 +1,89 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}分类标签列表{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">分类标签列表</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>分类标签</th>
+                <th>标签描述</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for taxonomy_type_entity in pagination %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ taxonomy_type_entity.taxonomyName }}</td>
+                <td>{{ taxonomy_type_entity.taxonomyDesc }}</td>
+                <td>
+                    {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                    or app.user.userPermissionGroupEntity.permissionJson.taxonomyEntity[taxonomy_type_entity.taxonomyAlias].view is defined %}
+                        <a href="{{ path('taxonomy_entity_index', {'taxonomyTypeEntity_Id': taxonomy_type_entity.id}) }}">显示词汇</a>
+                    {% endif %}
+                    {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                    or app.user.userPermissionGroupEntity.permissionJson.taxonomyTypeEntity[taxonomy_type_entity.taxonomyAlias].edit is defined %}
+                        <a href="{{ path('taxonomy_type_entity_editPage', {'taxonomyTypeEntity_Id': taxonomy_type_entity.id}) }}">编辑</a>
+                    {% endif %}
+                    {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                    or app.user.userPermissionGroupEntity.permissionJson.taxonomyTypeEntity[taxonomy_type_entity.taxonomyAlias].delete is defined %}
+                        <a href="" data-toggle="modal" data-target="#deleteModal_{{ taxonomy_type_entity.id }}">删除</a>
+                    {% endif %}
+                </td>
+            </tr>
+            <!-- 点删除按钮时弹出对话框提醒一下 -->
+            <div class="modal fade" id="deleteModal_{{ taxonomy_type_entity.id }}" tabindex="-1" role="dialog"
+                 aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">删除分类标签 {{ taxonomy_type_entity.taxonomyName }} ？</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            您将要删除：{{ taxonomy_type_entity.taxonomyName }}  分类标签类型，
+                            {{ taxonomy_type_entity.taxonomyName }} 类型下的所有词汇也将被删除，
+                            确定要这样做吗？
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                            <a href="{{ path('taxonomy_type_entity_deleteAction', {'taxonomyTypeEntity_Id': taxonomy_type_entity.id}) }} ">
+                                <button type="button" class="btn btn-primary" >确定</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <tr>
+                <td colspan="4">还没有分类标签</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {# display navigation #}
+    <div class="col-12">
+        <div class="navigation">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    </div>
+    {% if "ROLE_SUPER_ADMIN" in app.user.roles
+    or app.user.userPermissionGroupEntity.permissionJson.taxonomyTypeEntity.new is defined %}
+        <a href="{{ path('taxonomy_type_entity_addPage') }}">添加分类标签</a>
+    {% endif %}
+{% endblock %}

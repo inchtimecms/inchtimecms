@@ -1,0 +1,88 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}表单类型列表{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">表单类型列表</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th><input type="checkbox" class="form-checkbox" id="check_all_contents" title="选择此表中的所有行"></th>
+            <th>#</th>
+            <th>表单类型</th>
+            <th>表单别名</th>
+            <th>发布日期</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for contactFormTypeEntity in contactFormTypeEntitys %}
+            <tr>
+                <td><input type="checkbox" class="form-checkbox" name="content_id[]"></td>
+                <td>{{ loop.index }}</td>
+                <td>{{ contactFormTypeEntity.formTypeName }}</td>
+                <td>{{ contactFormTypeEntity.formTypeAlias }}</td>
+                <td>{{ contactFormTypeEntity.createAt ? contactFormTypeEntity.createAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                or app.user.userPermissionGroupEntity.permissionJson.contactFormTypeEntity.edit is defined %}
+                    <a href="{{ path('contact_form_type_edit', {'id': contactFormTypeEntity.id}) }}">编辑</a>
+                {% endif %}
+                {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                or app.user.userPermissionGroupEntity.permissionJson.contactFormTypeEntity.delete is defined %}
+                    <a data-toggle="modal" data-target="#deleteModal_{{ contactFormTypeEntity.id }}"
+                           href="">删除</a>
+                {% endif %}
+                </td>
+            </tr>
+            <!-- 点删除按钮时弹出对话框提醒一下 -->
+            <div class="modal fade" id="deleteModal_{{ contactFormTypeEntity.id }}" tabindex="-1" role="dialog"
+                 aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">删除当前内容？</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            您将要删除：{{ contactFormTypeEntity.formTypeName }} ，此表单类型下的所有数据都将删除，
+                            确定要这样做吗？
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                            <a href="{{ path('contact_form_type_delete', {'id': contactFormTypeEntity.id}) }}">
+                                <button type="button" class="btn btn-primary" >确定</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <tr>
+                <td colspan="5">还没有发布任何内容。</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if "ROLE_SUPER_ADMIN" in app.user.roles
+    or app.user.userPermissionGroupEntity.permissionJson.contactFormTypeEntity.new is defined %}
+        <a href="{{ path('contact_form_type_new') }}">添加新的表单类型</a>
+    {% endif %}
+{% endblock %}
+
+
+{% block custom_javascripts %}
+
+{% endblock %}

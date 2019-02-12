@@ -1,0 +1,235 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}添加运费模板{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title">添加运费模板</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="col-md-12">
+        <!--begin::Portlet-->
+        <div class="m-portlet">
+            <!--begin::Form-->
+            <form class="m-form m-form--fit m-form--label-align-right"
+                  action="{{ path('ship_fee_template_entity_new_action') }}" method="POST">
+                <div class="m-portlet__body">
+                    <div class="form-group m-form__group form-inline">
+                        <label for="">运费模板名称(必填)：</label>
+                        <input type="text" class="form-control m-input" required="required" id="shipTitle" name="shipTitle">
+                    </div>
+                    <div class="form-group m-form__group">
+                        <label for="" id="">宝贝地址(必填)：</label>
+                        <div class="col-lg-3 col-md-3 col-sm-12 d-inline-block row">
+                            <select class="form-control" id="province" name="province" required="required">
+                                <option>-</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-12 d-inline-block row">
+                            <select class="form-control" id="city" name="city" required="required">
+
+                            </select>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-12 d-inline-block row">
+                            <select class="form-control" id="district" name="district" required="required">
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group m-form__group form-inline">
+                        <label for="" id="">发货时间：</label>
+                        <div class="col-lg-4 col-md-4 col-sm-12 d-inline-block row">
+                            <select class="form-control" id="shiptime" name="shiptime">
+                                <option>4小时内</option>
+                                <option>8小时内</option>
+                                <option>12小时内</option>
+                                <option>1天内</option>
+                                <option>2天内</option>
+                                <option>3天内</option>
+                                <option>5天内</option>
+                                <option>7天内</option>
+                                <option>10天内</option>
+                                <option>15天内</option>
+                                <option>20天内</option>
+                                <option>25天内</option>
+                                <option>30天内</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group m-form__group form-inline">
+                        <label>是否包邮：</label>
+                        <div class="m-radio-inline" id="boolFreeShip">
+                            <label class="m-radio">
+                                <input type="radio" name="boolFreeShip" value="1" checked > 卖家承担运费
+                                <span></span>
+                            </label>
+                            <label class="m-radio">
+                                <input type="radio" name="boolFreeShip" value="0"> 自定义运费
+                                <span></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group m-form__group">
+                        <label for="" id="shipmethodlabel">发货方式：</label>
+
+                        <div class="m-checkbox-list">
+                            <label class="m-checkbox">
+                                <input type="checkbox" id="shipExpress" name="shipexpress"
+                                       onchange="showShipMethods(this,'.ship_express')"> 快递
+                                <span></span>
+                            </label>
+                            <div class="ship_express form-group-sm form-inline">
+                                默认运费:
+                                <input class="form-control form-control-sm defaultNum" name="expressdefaultnum"
+                                       type="number" value="1">
+                                件内
+                                <input class="form-control form-control-sm defaultFee" name="expressdefaultfee"
+                                       type="number" value="1">
+                                元,每增加
+                                <input class="form-control form-control-sm addNum" name="expressaddnum" type="number"
+                                       value="1">
+                                件,增加运费
+                                <input class="form-control form-control-sm addFee" name="expressaddfee" type="number"
+                                       value="1">
+                                元.
+                            </div>
+
+                            <label class="m-checkbox">
+                                <input type="checkbox" id="shipEms" name="shipems"
+                                       onchange="showShipMethods(this,'.ship_ems')"> EMS
+                                <span></span>
+                            </label>
+                            <div class="ship_ems form-group-sm form-inline">
+                                默认运费:
+                                <input class="form-control form-control-sm defaultNum" name="emsdefaultnum"
+                                       type="number" value="1">
+                                件内
+                                <input class="form-control form-control-sm defaultFee" name="emsdefaultfee"
+                                       type="number" value="1">
+                                元,每增加
+                                <input class="form-control form-control-sm addNum" name="emsaddnum" type="number"
+                                       value="1">
+                                件,增加运费
+                                <input class="form-control form-control-sm addFee" name="emsaddfee" type="number"
+                                       value="1">
+                                元.
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="m-portlet__foot m-portlet__foot--fit">
+                    <div class="m-form__actions">
+                        <button id="addShipTemplateBtn" class="btn btn-primary">确定</button>
+                    </div>
+                </div>
+            </form>
+            <!--end::Form-->
+        </div>
+        <!--end::Portlet-->
+
+    </div>
+
+{% endblock %}
+
+
+{% block custom_javascripts %}
+
+    <script type="text/javascript">
+        var rootURL = window.location.protocol + "//" + window.location.host;
+        var pcsPath = rootURL + "/assets/inchTimeJs/lib/pca.json"
+        var jsonData = "";
+        $.getJSON(pcsPath, function (data) {
+            // console.log(data);
+            //data就是json对象了，不需要再转换
+            var provinceOptions = "";
+            jsonData = data;
+            for (var key in data) {
+                provinceOptions = provinceOptions + "<option>" + key + "</option>";
+            }
+            $("#province").append(provinceOptions);
+
+        });
+
+        $("#province").change(onchangeprovince);
+
+        function onchangeprovince() {
+            $("#city").empty();
+            var currProvince = $("#province").find("option:selected").text();
+            var currData = jsonData[currProvince];
+            var currCity = "";
+            for (var key in currData) {
+                currCity = currCity + "<option>" + key + "</option>";
+            }
+            $("#city").append(currCity);
+
+
+            var currCity = $("#city").find("option:selected").text();
+            $("#district").empty();
+            var currDistrictData = jsonData[currProvince][currCity];
+            var currDisctrict = "";
+            for (var key in currDistrictData) {
+                currDisctrict = currDisctrict + "<option>" + currDistrictData[key] + "</option>";
+            }
+            $("#district").append(currDisctrict);
+
+        }
+
+        $("#city").change(onchangecity);
+
+        function onchangecity() {
+            $("#district").empty();
+            var currProvince = $("#province").find("option:selected").text();
+            var currCity = $("#city").find("option:selected").text();
+
+            var currDistrictData = jsonData[currProvince][currCity];
+
+            // console.log(currDistrictData);
+
+            var currDisctrict = "";
+            for (var key in currDistrictData) {
+                currDisctrict = currDisctrict + "<option>" + currDistrictData[key] + "</option>";
+            }
+            $("#district").append(currDisctrict);
+        }
+
+
+        function showShipMethods(element, domClass) {
+            //不包邮时候才显示运费设置,包邮了就只显发货是快递 还是 EMS就行了.
+            if ($("#boolFreeShip input[type=radio]:checked").val() == 0) {
+                if ($(element).prop('checked') == true) {
+                    $(domClass).show();
+                } else {
+                    $(domClass).hide();
+                }
+            }
+
+        }
+
+
+        $("#boolFreeShip input[type=radio]").click(resetShipMethods);
+
+        function resetShipMethods() {
+            $(".notice").remove();
+
+            if ($("#shipExpress").prop("checked") == false
+                && $("#shipEms").prop("checked") == false) {
+                $("#shipmethodlabel").append("<span class='notice' style='color:red'>请勾选发货方式</span>");
+            }
+
+            $("#shipExpress").prop("checked", false);
+            $("#shipEms").prop("checked", false);
+
+        }
+
+
+    </script>
+
+
+{% endblock %}

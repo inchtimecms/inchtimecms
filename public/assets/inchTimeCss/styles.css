@@ -1,0 +1,95 @@
+body{
+  font-family: "微软雅黑", "黑体", "宋体", sans-serif;
+}
+
+/*文件管理页面样式*/
+
+.file-wrapper{
+  width: 100%;
+  padding-bottom: 100%;
+  overflow: hidden;
+}
+.type-image, .type-file{
+  width: 100%;
+  height: 0;
+  background: black;
+  text-align: center;
+  position: relative;
+}
+
+.type-image:hover, .type-file:hover{
+  cursor: pointer;
+}
+
+.flaticon-file{
+  font-size:5rem;
+  opacity: 0.6;
+}
+.fields_wrapper .m--margin-top-10{
+  position: relative;
+}
+.input-choice-wrapper{
+  position: absolute;
+  background: #ffffff;
+  width:100%;
+  z-index: 10;
+  border: 1px solid #ebedf2;
+  border-top:none;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+.refContentList ul, .input-choice-wrapper ul{
+  padding:0px;
+  margin:0px;
+}
+.refContentList ul>li, .input-choice-wrapper ul>li{
+  list-style: none;
+  font-size: 1.2rem;
+  padding-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.refContentList li{
+  float: left;
+  padding-right:15px;
+}
+.ref-li .flaticon-close:hover{
+  color: #0a8cf0;
+}
+.ref-li .ref-item{
+  padding-left:10px;
+}
+.refContentList ul>li:hover, .input-choice-wrapper ul>li:hover{
+  cursor: pointer;
+  background: #ebedf2;
+}
+
+
+/*运费模板页面*/
+.ship_mlr{
+  width: 100%;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.ship_express input.form-control-sm, .ship_ems input.form-control-sm{
+    width: 100px;
+}
+.ship_express, .ship_ems{
+  display: none;
+  padding:15px;
+  border:1px solid #dddddd;
+  margin-bottom: 15px;
+  background: #eeeeee;
+}
+
+/*商品添加页面*/
+.saleprops-img{
+  width: 80px;
+}
+
+.note-editor .panel-heading.note-toolbar{
+  padding: 0 0 5px 5px;
+}
+
+/*权限 TABLE 中行的分割线*/

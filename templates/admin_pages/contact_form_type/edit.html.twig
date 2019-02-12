@@ -1,0 +1,88 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}添加表单{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">添加表单</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="col-12">
+        <div class="m-portlet m-portlet--tab">
+
+            {{ form_errors(editCustomForm) }}
+
+            {{ form_start(editCustomForm,{"attr": {"class":"m-form m-form--fit m-form--label-align-right m--padding-top-30"}}) }}
+                <div class="m-form__group border-bottom">
+                    {{ form_row(editCustomForm.formTypeName) }}
+
+                    {{ form_row(editCustomForm.formTypeAlias) }}
+                </div>
+
+                <div class="contact-form-field m-form__group" data-prototype="{{ form_widget(editCustomForm.contactFormFieldEntities.vars.prototype)|e('html_attr') }}">
+                    {% for contactFormFieldEntity in editCustomForm.contactFormFieldEntities %}
+                        {{ form_row(contactFormFieldEntity) }}
+                    {% endfor %}
+
+                    <button id="js-add-field-input" type="button" class="btn-sm btn-info">添加字段</button>
+                    <button id="js-delete-field-input" type="button" class="btn-sm btn-info">删除字段</button>
+                </div>
+                <div class="m-form__actions">
+                    <button class="btn btn-primary">确定</button>
+                </div>
+
+            {{ form_end(editCustomForm) }}
+        </div>
+    </div>
+
+
+{% endblock %}
+
+
+{% block custom_javascripts %}
+    <script type="text/javascript">
+        var $collectionHolder;
+
+        function addField($collectionHolder, element){
+            var prototype = $collectionHolder.data('prototype');
+            var index = $collectionHolder.data('index');
+            var newForm = prototype;
+            newForm = newForm.replace(/__name__/g, index);
+
+            $collectionHolder.data('index', index + 1);
+
+            $(element).before(newForm);
+        }
+
+        function deleteField($collectionHolder){
+
+            var index = $collectionHolder.data('index');
+            $collectionHolder.data('index', index - 1);
+
+            var lastInput= $collectionHolder.find("input[type=text]").last();
+            var lastFieldElement = $(lastInput).parent("div").parent("div");
+            lastFieldElement.remove();
+        }
+
+        $(document).ready(function(){
+            $collectionHolder = $('div.contact-form-field');
+
+            $collectionHolder.data('index', $collectionHolder.find('input[type=text]').length);
+            console.log($collectionHolder.data("index"));
+
+            $("#js-add-field-input").on("click",function(e){
+                addField($collectionHolder, this);
+            });
+
+            $("#js-delete-field-input").on("click",function(e){
+                deleteField($collectionHolder);
+            });
+        });
+    </script>
+{% endblock %}

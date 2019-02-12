@@ -1,0 +1,349 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}添加内容{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">添加内容</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <div class="col-md-12">
+        <!--begin::Portlet-->
+        <div class="m-portlet m-portlet--tab">
+            <!--begin::Form-->
+            <form class="m-form m-form--fit m-form--label-align-right" method="post" id="addNewContent"
+                  action={{ path("content_entity_new_action",{"contentTypeEntity_id": contentTypeEntity.id }) }}>
+                <div class="m-portlet__body">
+                    <div class="fields_wrapper">
+                        <div class="form-group m-form__group">
+                            <div class="m--margin-top-10">
+                                <label class="font-weight-bold">标题（必填）：</label>
+                                <input type="text" class="form-control m-input" required="required" name="contentTitle">
+                            </div>
+                            <div class="m--margin-top-10">
+                                <label class="font-weight-bold">正文：</label>
+                                <textarea id="summernote" class="form-control m-input" rows="3" required="required"
+                                          name="contentBody">
+                                </textarea>
+                            </div>
+
+                            {#循环显示当前内容类型下的字段的input#}
+                            {% for fieldTypeEntity in fieldTypeEntitys %}
+                                {% if fieldTypeEntity.deleted != "1" %}
+                                    <div class="m--margin-top-10">
+                                        <label class="font-weight-bold">{{ fieldTypeEntity.fieldName }}:</label><i
+                                                class="m--margin-left-20 m-loader" style="display: none;"></i>
+                                        {% if fieldTypeEntity.fieldTypeValue.fieldTypeInSQL == "string"
+                                        and fieldTypeEntity.fieldTypeValue.fieldValueTypeName != "图像"
+                                        and fieldTypeEntity.fieldTypeValue.fieldValueTypeName != "文件"
+                                        and fieldTypeEntity.fieldTypeValue.fieldValueTypeName != "内容"
+                                        and fieldTypeEntity.fieldTypeValue.fieldValueTypeName != "小数"
+                                        and fieldTypeEntity.fieldTypeValue.fieldValueTypeName != "布尔值"
+                                        and fieldTypeEntity.fieldTypeValue.fieldValueTypeName != "分类标签" %}
+
+                                            <input type="text" class="form-control m-input"
+                                                   name="string:{{ fieldTypeEntity.fieldMachineAlias }}">
+                                            <span class="m-form__help">{{ fieldTypeEntity.fieldDescription }}</span>
+
+                                        {% elseif fieldTypeEntity.fieldTypeValue.fieldValueTypeName == "日期" %}
+
+                                            <input type="datetime-local" class="form-control m-input"
+                                                   style="width: 50%;"
+                                                   name="datetime:{{ fieldTypeEntity.fieldMachineAlias }}">
+
+                                            <span class="m-form__help">{{ fieldTypeEntity.fieldDescription }}</span>
+
+                                        {% elseif fieldTypeEntity.fieldTypeValue.fieldValueTypeName == "长纯文本" %}
+                                            <textarea class="form-control m-input" rows="3"
+                                                      name="text:{{ fieldTypeEntity.fieldMachineAlias }}"></textarea>
+                                            <span class="m-form__help">{{ fieldTypeEntity.fieldDescription }}</span>
+
+                                        {% elseif fieldTypeEntity.fieldTypeValue.fieldValueTypeName == "内容" %}
+
+                                            <input type="text" class="form-control m-input field_ref_contentType"
+                                                   content="{{ fieldTypeEntity.fieldSettings }}"
+                                                   oninput='fetchContentTypeEntityList("{{ path('fetch_content_action') }}",this);'
+                                                   name="string:{{ fieldTypeEntity.fieldMachineAlias }}">
+
+
+                                            <div class="input-choice-wrapper" style="display:none;">
+                                                <ul>
+                                                </ul>
+                                            </div>
+                                            <span class="m-form__help">{{ fieldTypeEntity.fieldDescription }}</span>
+                                            <div class="refContentList" style="display: none;">
+                                                <ul>
+                                                </ul>
+                                            </div>
+
+                                            <input type="hidden" class="form-control m-input field_ref_contentType"
+                                                   name="ref_contentType:{{ fieldTypeEntity.fieldMachineAlias }}">
+
+                                            <div class="clearfix"></div>
+
+                                        {% elseif fieldTypeEntity.fieldTypeValue.fieldValueTypeName == "分类标签" %}
+
+                                            <input type="text" class="form-control m-input field_ref_taxonomyType "
+                                                   content="{{ fieldTypeEntity.fieldSettings }}"
+                                                   oninput='fetchTaxonomyEntityList("{{ path('fetch_taxonomy_action') }}", this);'
+                                                   name="string:{{ fieldTypeEntity.fieldMachineAlias }}">
+
+
+                                            <div class="input-choice-wrapper" style="display:none;">
+                                                <ul>
+                                                </ul>
+                                            </div>
+                                            <button type="button" onclick="addTaxonomyBtnClick(this)"
+                                                    class="btn btn-primary btn-sm addTaxonomyEntity m--margin-top-10 m--margin-bottom-10">
+                                                添加词汇
+                                            </button>
+                                            <span class="m-form__help"
+                                                  class="d-block">{{ fieldTypeEntity.fieldDescription }}
+                                                填写好分类词汇后，点击添加词汇按钮，多个词汇之间请用空格符分开。</span>
+                                            <div class="refContentList" style="display: none;">
+                                                <ul>
+                                                </ul>
+                                            </div>
+                                            <input type="hidden" class="form-control m-input field_ref_taxonomyType"
+                                                   name="ref_taxonomyType:{{ fieldTypeEntity.fieldMachineAlias }}">
+
+                                            <div class="clearfix"></div>
+
+                                        {% elseif fieldTypeEntity.fieldTypeValue.fieldValueTypeName == "文件" %}
+
+                                            {% set fileExtensions = fieldTypeEntity.fieldSettings | split(" ") %}
+
+                                            <input type="file" class="form-control m-input" content="upload-file"
+                                                   onchange='fileInputClick("{{ path('file_upload') }}", this)'
+                                                   accept="{% for fileExtension in fileExtensions %}{{ value[fileExtension] }},{% endfor %}"
+                                                   name="{{ fieldTypeEntity.id }}:{{ fieldTypeEntity.fieldMachineAlias }}">
+                                            <span class="m-form__help">{{ fieldTypeEntity.fieldDescription }}
+                                                ,允许的文件后缀：{{ fieldTypeEntity.fieldSettings }}</span>
+
+                                        {% elseif fieldTypeEntity.fieldTypeValue.fieldValueTypeName == "图像" %}
+
+                                            {% set fileExtensions = fieldTypeEntity.fieldSettings | split(" ") %}
+
+                                            <input type="file" class="form-control m-input " content="upload-image"
+                                                   onchange='fileInputClick("{{ path('file_upload') }}", this)'
+                                                   accept="{% for fileExtension in fileExtensions %}{{ value[fileExtension] }},{% endfor %}"
+                                                   name="{{ fieldTypeEntity.id }}:{{ fieldTypeEntity.fieldMachineAlias }}">
+                                            <span class="m-form__help">{{ fieldTypeEntity.fieldDescription }}
+                                                ,允许的文件后缀：{{ fieldTypeEntity.fieldSettings }}</span>
+
+                                        {% elseif fieldTypeEntity.fieldTypeValue.fieldValueTypeName == "小数" %}
+                                            {# 如果当前字段的别名和商品类型的引用的别名相同 #}
+
+                                            <input type="text" class="form-control m-input"
+                                                    onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" onblur="toDecimal2(this, {{ fieldTypeEntity.fieldSettings }})"
+                                                    {% if contentTypeEntity.productTypeEntity != null %}
+                                                        {% if contentTypeEntity.productTypeEntity.priceField == fieldTypeEntity.fieldMachineAlias %}required="required"{% endif %}
+                                                        {% if contentTypeEntity.productTypeEntity.discountPriceField == fieldTypeEntity.fieldMachineAlias %}required="required"{% endif %}
+                                                    {% endif %}
+                                                   name="{{ fieldTypeEntity.id }}:{{ fieldTypeEntity.fieldMachineAlias }}">
+                                            <span class="m-form__help">{{ fieldTypeEntity.fieldDescription }}
+                                                ,请输入小数,且小数点后保留：{{ fieldTypeEntity.fieldSettings }}位.</span>
+
+                                        {% elseif fieldTypeEntity.fieldTypeValue.fieldValueTypeName == "布尔值" %}
+                                            {# 如果当前字段的别名和商品类型的引用的别名相同 #}
+                                            {% set saleStatus = fieldTypeEntity.fieldSettings|split(",") %}
+
+                                            <label class="m-radio m--margin-left-20">
+                                                <input type="radio" checked="checked" value="1"
+                                                        {% if contentTypeEntity.productTypeEntity != null %}
+                                                            {% if contentTypeEntity.productTypeEntity.saleStatus == fieldTypeEntity.fieldMachineAlias %}required="required"{% endif %}
+                                                        {% endif %}
+                                                       name="{{ fieldTypeEntity.id }}:{{ fieldTypeEntity.fieldMachineAlias }}">{{ saleStatus[0] }}
+                                                <span></span>
+                                            </label>
+                                            <label class="m-radio m--margin-left-20">
+                                                <input type="radio" value="0"
+                                                        {% if contentTypeEntity.productTypeEntity != null %}
+                                                            {% if contentTypeEntity.productTypeEntity.saleStatus == fieldTypeEntity.fieldMachineAlias %}required="required"{% endif %}
+                                                        {% endif %}
+                                                       name="{{ fieldTypeEntity.id }}:{{ fieldTypeEntity.fieldMachineAlias }}">{{ saleStatus[1] }}
+                                                <span></span>
+                                            </label>
+                                            <br>
+                                            <span class="m-form__help">{{ fieldTypeEntity.fieldDescription }}</span>
+                                        {% endif %}
+
+                                    </div>
+                                {% endif %}
+
+                            {% endfor %}
+
+                            {#如果当前内容类型有对应的商品类型，这里开始添加的是商品类型的字段,比如销售属性等#}
+                            {% if contentTypeEntity.productTypeEntity != null %}
+                                <div class="m--margin-top-10">
+                                    <label class="font-weight-bold">勾选销售属性：</label>
+                                    {#//获取商品的销售属性#}
+                                    {% for salePropGroup in contentTypeEntity.productTypeEntity.salePropField %}
+                                        {% if loop.index == 1 %}
+                                            <div class="sale-prop-group-1 m--margin-bottom-20">
+                                                <label for="">{{ salePropGroup.title }}</label>
+                                                <div class="sale-prop-group-1-item m--margin-top-10 col-12">
+                                                    <div class="row">
+                                                        <div class="col-1 m-checkbox-inline">
+                                                            <label class="m-checkbox" style="display: none;">
+                                                                <input type="checkbox" onclick="propCheckBoxClick(this)"
+                                                                       class="sale-prop-group-1-item-checkbox">
+                                                                <span></span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <input class="form-control m-input sale-prop-group-1-item-value"
+                                                                   value="" readonly="readonly"
+                                                                   onclick="propValueClick(this)"
+                                                                   placeholder="请选择{{ salePropGroup.title }}"
+                                                                   type="text">
+                                                            <div class="list-group" style="display: none;">
+                                                                {% for salePropValKey, salePropValValue in salePropGroup.value %}
+                                                                    <a class="list-group-item list-group-item-action"
+                                                                       onclick="propValueLiClick(this)">{{ salePropValValue }}</a>
+                                                                {% endfor %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <input class="form-control m-input sale-prop-group-1-item-commit"
+                                                                   value="" placeholder="属性备注" type="text">
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <input type="hidden" class="upload-large-img-result-input">
+                                                            <input type="hidden" class="upload-small-img-result-input">
+                                                            <input type="hidden" class="upload-img-entity-id">
+                                                            <input type="file" onchange='uploadPropsImg("{{ path('file_upload') }}",this)'
+                                                                   style="display:none" class="upload-file-hidden-input"
+                                                                   accept="image/gif,image/jpeg,image/png">
+                                                            <button class="upload-img-btn btn btn-secondary"
+                                                                    onclick="btnPropsImgClick(this)" type="button">上传图片
+                                                            </button>
+                                                            <div class="prop-img-result" style="display: none;">
+                                                                <img width="40px" height="40px">
+                                                                <button class="btn btn-secondary" type="button"
+                                                                        onclick="deletePropsImg(this)">删除图片
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            <div class="sale-prop-group-2">
+                                                <label for="">{{ salePropGroup.title }}</label>
+                                                <div class="m-checkbox-inline">
+                                                    {% for salePropValKey, salePropValValue in salePropGroup.value %}
+                                                        <label class="m-checkbox">
+                                                            <input type="checkbox" class="sale-prop-group-2-checkbox" name="group2[prop][{{ loop.index0 }}][name]"
+                                                                   onclick="group2checkboxClick(this)"
+                                                                   value="{{ salePropValValue }}"> {{ salePropValValue }}
+                                                            <span></span>
+                                                        </label>
+                                                    {% endfor %}
+                                                </div>
+                                                <span class="m-form__help">请勾选此商品对应的销售属性</span>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+
+                                <div class="m--margin-top-10">
+                                    <label class="font-weight-bold">销售规格：</label>
+                                    {#//动态增加商品的销售属性#}
+                                    <div class="sale-props-table">
+                                        <table class="col-12 table">
+                                            <thead>
+                                                <tr>
+                                                    {% for salePropGroup in contentTypeEntity.productTypeEntity.salePropField %}
+                                                        <th>{{ salePropGroup.title }}</th>
+                                                    {% endfor %}
+                                                    <th>库存</th>
+                                                    <th>单价</th>
+                                                    <th>商品编码</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    {% for salePropGroup in contentTypeEntity.productTypeEntity.salePropField %}
+                                                        <td></td>
+                                                    {% endfor %}
+                                                    <td>
+                                                        <div class="form-inline input-group-sm">
+                                                            <input class="form-control md-input bat-modify-number col-6" type="number" min="0">
+                                                            <button type="button" class="btn btn-sm btn-bat-modify-number" onclick="batBtnClick('.bat-modify-number','.sale-prop-row-number')">批量修改</button>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-inline input-group-sm">
+                                                            <input class="form-control md-input bat-modify-price col-6" type="text" onblur="toDecimal2(this, 2)" onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')">
+                                                            <button type="button" class="btn btn-sm  btn-bat-modify-price" onclick="batBtnClick('.bat-modify-price','.sale-prop-row-price')">批量修改</button>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-inline input-group-sm">
+                                                            <input class="form-control md-input bat-modify-code col-6" type="text" onkeyup="value=value.replace(/[\W]/g,'')">
+                                                            <button type="button" class="btn btn-sm  btn-bat-modify-code" onclick="batBtnClick('.bat-modify-code','.sale-prop-row-code')">批量修改</button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="m-portlet__foot m-portlet__foot--fit">
+                    <div class="m-form__actions">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token("add_content_entity") }}">
+                        <button id="addNewContentTypeButton" class="btn btn-primary">确定</button>
+                    </div>
+                </div>
+            </form>
+
+            <!--end::Form-->
+        </div>
+
+        <!--end::Portlet-->
+
+    </div>
+{% endblock %}
+
+{% block custom_javascripts %}
+
+    <script src="{{ asset('assets/summernote-0.8.9-dist/dist/summernote.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/summernote-0.8.9-dist/dist/lang/summernote-zh-CN.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/inchTimeJs/content.js') }}" type="text/javascript"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            //编辑器
+            $('#summernote').summernote({
+                lang: 'zh-CN',
+                height: 300,
+                callbacks: {
+                    onImageUpload: function (files, editor, welEditable) {
+                        for (var i = files.length - 1; i >= 0; i--) {
+                            sendFile("{{ path('file_upload') }}" ,files[i], this);
+                        }
+                    }
+                }
+            });
+
+        });
+
+    </script>
+{% endblock %}

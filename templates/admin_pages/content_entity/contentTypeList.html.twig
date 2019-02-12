@@ -1,0 +1,66 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}添加内容{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">添加内容</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    {#{{ dump(contentTypeEntitys) }}#}
+    <div class="col-xl-12">
+
+        <!--begin::Portlet-->
+        <div class="m-portlet">
+            <div class="m-portlet__head">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+                        <h3 class="m-portlet__head-text">
+                            选择内容类型
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="m-portlet__body">
+                <!--begin::Section-->
+                <div class="m-section">
+                    <div class="m-section__content">
+                        <table class="table">
+                            <tbody>
+
+                            {% for contentTypeEntity in contentTypeEntitys %}
+                                {% if contentTypeEntity.deleted != "1" %}
+                                    {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                                    or app.user.userPermissionGroupEntity.permissionJson.contentEntity[contentTypeEntity.contentTypeMachineAlias].new is defined %}
+                                    <tr>
+                                        <td>
+                                            <h5><a href="{{ path("content_entity_new_page",{'contentTypeEntity_id': contentTypeEntity.id }) }}" >
+                                                    {{ contentTypeEntity.contentTypeName }}</a></h5>
+                                            <p>{{ contentTypeEntity.contentTypeDescription }}</p>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                {% endif %}
+
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!--end::Section-->
+            </div>
+            <!--end::Form-->
+        </div>
+
+        <!--end::Portlet-->
+
+    </div>
+
+
+{% endblock %}

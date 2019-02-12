@@ -1,0 +1,282 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}添加用户组{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">添加用户组</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="col-12">
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>权限名称</th>
+                <th>允许查看</th>
+                <th>允许创建</th>
+                <th>允许编辑</th>
+                <th>允许删除</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {#//内容管理权限：内容是否可以添加 修改 删除，#}
+            <tr>
+                <td>内容管理<input type="hidden" name="contentEntity[Object]"></td>
+                <td><input type="checkbox" {% if permissionJson.contentEntity.view is defined %} checked="checked"{% endif %} name="contentEntity[view]">查看</td>
+                <td><input type="checkbox" {% if permissionJson.contentEntity.new is defined %} checked="checked"{% endif %} name="contentEntity[new]">创建</td>
+                <td></td>
+                <td></td>
+                {#<td><input type="checkbox" {% if permissionJson.contentEntity.edit is defined %} checked="checked"{% endif %} name="contentEntity[edit]">编辑</td>#}
+                {#<td><input type="checkbox" {% if permissionJson.contentEntity.delete is defined %}checked="checked" {% endif %}name="contentEntity[delete]">删除</td>#}
+            </tr>
+            {#每个类型的内容是否可以 添加 修改 删除#}
+            {% for contentTypeEntity in contentTypeEntitys %}
+                <tr>
+                    <td>内容:{{ contentTypeEntity.contentTypeName }} <input type="hidden" name="contentEntity[{{ contentTypeEntity.contentTypeMachineAlias }}][Object]"></td>
+                    <td><input type="checkbox" {% if permissionJson.contentEntity[contentTypeEntity.contentTypeMachineAlias].view is defined %} checked="checked"{% endif %} name="contentEntity[{{ contentTypeEntity.contentTypeMachineAlias }}][view]">查看</td>
+                    <td><input type="checkbox" {% if permissionJson.contentEntity[contentTypeEntity.contentTypeMachineAlias].new is defined %} checked="checked"{% endif %} name="contentEntity[{{ contentTypeEntity.contentTypeMachineAlias }}][new]">创建</td>
+                    <td><input type="checkbox" {% if permissionJson.contentEntity[contentTypeEntity.contentTypeMachineAlias].edit is defined %} checked="checked"{% endif %} name="contentEntity[{{ contentTypeEntity.contentTypeMachineAlias }}][edit]">编辑</td>
+                    <td><input type="checkbox" {% if permissionJson.contentEntity[contentTypeEntity.contentTypeMachineAlias].delete is defined %} checked="checked"{% endif %} name="contentEntity[{{ contentTypeEntity.contentTypeMachineAlias }}][delete]">删除</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td></td>
+            </tr>
+            {#//内容类型的权限：内容类型是否可以添加 修改 删除，#}
+            <tr>
+                <td>内容类型<input type="hidden" name="contentTypeEntity[Object]"></td>
+                <td><input type="checkbox" {% if permissionJson.contentTypeEntity.view is defined  %} checked="checked" {% endif %} name="contentTypeEntity[view]">查看</td>
+                <td><input type="checkbox" {% if permissionJson.contentTypeEntity.new is defined  %} checked="checked" {% endif %} name="contentTypeEntity[new]">创建</td>
+                {#<td><input type="checkbox" {% if permissionJson.contentTypeEntity.edit is defined  %} checked="checked" {% endif %}  name="contentTypeEntity[edit]">编辑</td>#}
+                {#<td><input type="checkbox" {% if permissionJson.contentTypeEntity.delete is defined  %} checked="checked" {% endif %} name="contentTypeEntity[delete]">删除</td>#}
+                <td></td>
+                <td></td>
+            </tr>
+            {#每个类型的内容是否可以 添加 修改 删除#}
+            {% for contentTypeEntity in contentTypeEntitys %}
+                <tr>
+                    <td>内容类型:{{ contentTypeEntity.contentTypeName }} <input type="hidden" name="contentTypeEntity[{{ contentTypeEntity.contentTypeMachineAlias }}][Object]"></td>
+                    <td><input type="checkbox" {% if permissionJson.contentTypeEntity[contentTypeEntity.contentTypeMachineAlias].view is defined  %} checked="checked" {% endif %} name="contentTypeEntity[{{ contentTypeEntity.contentTypeMachineAlias }}][view]">查看</td>
+                    <td></td>
+                    {#<td><input type="checkbox" {% if permissionJson.contentTypeEntity[contentTypeEntity.contentTypeMachineAlias].new is defined  %} checked="checked" {% endif %} name="contentTypeEntity[{{ contentTypeEntity.contentTypeMachineAlias }}][new]">创建</td>#}
+                    <td><input type="checkbox" {% if permissionJson.contentTypeEntity[contentTypeEntity.contentTypeMachineAlias].edit is defined  %} checked="checked" {% endif %} name="contentTypeEntity[{{ contentTypeEntity.contentTypeMachineAlias }}][edit]">编辑</td>
+                    <td><input type="checkbox" {% if permissionJson.contentTypeEntity[contentTypeEntity.contentTypeMachineAlias].delete is defined  %} checked="checked" {% endif %} name="contentTypeEntity[{{ contentTypeEntity.contentTypeMachineAlias }}][delete]">删除</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td></td>
+            </tr>
+            {#//分类标签类型的权限：标签权限是否可以查看 添加 修改 删除#}
+            <tr>
+                <td>分类标签类型<input type="hidden" name="taxonomyTypeEntity[Object]"></td>
+                <td><input type="checkbox" {% if permissionJson.taxonomyTypeEntity.view is defined  %} checked="checked" {% endif %} name="taxonomyTypeEntity[view]">查看</td>
+                <td><input type="checkbox" {% if permissionJson.taxonomyTypeEntity.new is defined  %} checked="checked" {% endif %}  name="taxonomyTypeEntity[new]">创建</td>
+                {#<td><input type="checkbox" {% if permissionJson.taxonomyTypeEntity.edit is defined  %} checked="checked" {% endif %}  name="taxonomyTypeEntity[edit]">编辑</td>#}
+                {#<td><input type="checkbox" {% if permissionJson.taxonomyTypeEntity.delete is defined  %} checked="checked" {% endif %}  name="taxonomyTypeEntity[delete]">删除</td>#}
+                <td></td>
+                <td></td>
+            </tr>
+            {#每个类型的分类标签是否可以 添加 修改 删除#}
+            {% for taxonomyTypeEntity in taxonomyTypes %}
+                <tr>
+                    <td>分类标签类型:{{ taxonomyTypeEntity.taxonomyName }} <input type="hidden" name="taxonomyTypeEntity[{{ taxonomyTypeEntity.taxonomyAlias }}][Object]"></td>
+                    <td><input type="checkbox" {% if permissionJson.taxonomyTypeEntity[taxonomyTypeEntity.taxonomyAlias].view is defined %} checked="checked" {% endif %} name="taxonomyTypeEntity[{{ taxonomyTypeEntity.taxonomyAlias }}][view]">查看</td>
+                    <td></td>
+                    {#<td><input type="checkbox" {% if permissionJson.taxonomyTypeEntity[taxonomyTypeEntity.taxonomyAlias].new is defined %} checked="checked" {% endif %} name="taxonomyTypeEntity[{{ taxonomyTypeEntity.taxonomyAlias }}][new]">创建</td>#}
+                    <td><input type="checkbox" {% if permissionJson.taxonomyTypeEntity[taxonomyTypeEntity.taxonomyAlias].edit is defined %} checked="checked" {% endif %} name="taxonomyTypeEntity[{{ taxonomyTypeEntity.taxonomyAlias }}][edit]">编辑</td>
+                    <td><input type="checkbox" {% if permissionJson.taxonomyTypeEntity[taxonomyTypeEntity.taxonomyAlias].delete is defined %} checked="checked" {% endif %} name="taxonomyTypeEntity[{{ taxonomyTypeEntity.taxonomyAlias }}][delete]">删除</td>
+                </tr>
+            {% endfor %}
+            {#每个类型的分类标签下的词汇是否可以 添加 修改 删除#}
+            {% for taxonomyTypeEntity in taxonomyTypes %}
+                <tr>
+                    <td>分类词汇:{{ taxonomyTypeEntity.taxonomyName }} <input type="hidden" name="taxonomyEntity[{{ taxonomyTypeEntity.taxonomyAlias }}][Object]"></td>
+                    <td><input type="checkbox" {% if permissionJson.taxonomyEntity[taxonomyTypeEntity.taxonomyAlias].view is defined %}checked="checked"{% endif %} name="taxonomyEntity[{{ taxonomyTypeEntity.taxonomyAlias }}][view]">查看</td>
+                    <td><input type="checkbox" {% if permissionJson.taxonomyEntity[taxonomyTypeEntity.taxonomyAlias].new is defined %}checked="checked"{% endif %} name="taxonomyEntity[{{ taxonomyTypeEntity.taxonomyAlias }}][new]">创建</td>
+                    <td><input type="checkbox" {% if permissionJson.taxonomyEntity[taxonomyTypeEntity.taxonomyAlias].edit is defined %}checked="checked"{% endif %} name="taxonomyEntity[{{ taxonomyTypeEntity.taxonomyAlias }}][edit]">编辑</td>
+                    <td><input type="checkbox" {% if permissionJson.taxonomyEntity[taxonomyTypeEntity.taxonomyAlias].delete is defined %}checked="checked"{% endif %} name="taxonomyEntity[{{ taxonomyTypeEntity.taxonomyAlias }}][delete]">删除</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td></td>
+            </tr>
+            <tr>
+                <td>文件管理<input type="hidden" name="fileManageEntity[Object]"></td>
+                <td><input type="checkbox" {% if permissionJson.fileManageEntity.view is defined %} checked="checked"{% endif %} name="fileManageEntity[view]">查看</td>
+                <td><input type="checkbox" {% if permissionJson.fileManageEntity.new is defined %} checked="checked"{% endif %} name="fileManageEntity[new]">创建</td>
+                <td><input type="checkbox" {% if permissionJson.fileManageEntity.edit is defined %} checked="checked"{% endif %} name="fileManageEntity[edit]">编辑</td>
+                <td><input type="checkbox" {% if permissionJson.fileManageEntity.delete is defined %} checked="checked"{% endif %} name="fileManageEntity[delete]">删除</td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+            {#//商品内容的权限：内容是否可以添加 修改 删除，#}
+            <tr>
+                <td>商品管理<input type="hidden" name="productContentEntity[Object]"></td>
+                <td><input type="checkbox" {% if permissionJson.productContentEntity.view is defined  %} checked="checked" {% endif %} name="productContentEntity[view]">查看</td>
+                <td><input type="checkbox" {% if permissionJson.productContentEntity.new is defined  %} checked="checked" {% endif %} name="productContentEntity[new]">创建</td>
+                {#<td><input type="checkbox" {% if permissionJson.productContentEntity.edit is defined  %} checked="checked" {% endif %} name="productContentEntity[edit]">编辑</td>#}
+                {#<td><input type="checkbox" {% if permissionJson.productContentEntity.delete is defined  %}checked="checked" {% endif %} name="productContentEntity[delete]">删除</td>#}
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+            {#//内容类型的权限：内容类型是否可以添加 修改 删除，#}
+            <tr>
+                <td>商品类型<input type="hidden" name="productTypeEntity[Object]"></td>
+                <td><input type="checkbox" {% if permissionJson.productTypeEntity.view is defined %} checked="checked" {% endif %} name="productTypeEntity[view]">查看</td>
+                <td><input type="checkbox" {% if permissionJson.productTypeEntity.new is defined %} checked="checked" {% endif %} name="productTypeEntity[new]">创建</td>
+                {#<td><input type="checkbox" {% if permissionJson.productTypeEntity.edit is defined %} checked="checked" {% endif %} name="productTypeEntity[edit]">编辑</td>#}
+                {#<td><input type="checkbox" {% if permissionJson.productTypeEntity.delete is defined %}checked="checked" {% endif %} name="productTypeEntity[delete]">删除</td>#}
+                <td></td>
+                <td></td>
+            </tr>
+            {% for productTypeEntity in productTypeEntitys %}
+                <tr>
+                    <td>商品类型:{{ productTypeEntity.productTypeName }}<input type="hidden" name="productTypeEntity[{{ productTypeEntity.productAlias }}][Object]"></td>
+                    <td><input type="checkbox" {% if permissionJson.productTypeEntity[productTypeEntity.productAlias].view is defined %}checked="checked"{% endif %} name="productTypeEntity[{{ productTypeEntity.productAlias }}][view]">查看</td>
+                    <td></td>
+                    {#<td><input type="checkbox" checked="checked" name="productTypeEntity[{{ productTypeEntity.productAlias }}][new]">创建</td>#}
+                    <td><input type="checkbox" {% if permissionJson.productTypeEntity[productTypeEntity.productAlias].edit is defined %}checked="checked"{% endif %} name="productTypeEntity[{{ productTypeEntity.productAlias }}][edit]">编辑</td>
+                    <td><input type="checkbox" {% if permissionJson.productTypeEntity[productTypeEntity.productAlias].delete is defined %}checked="checked"{% endif %} name="productTypeEntity[{{ productTypeEntity.productAlias }}][delete]">删除</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td></td>
+            </tr>
+            <tr>
+                <td>运费设置<input type="hidden" name="shipFeeTemplate[Object]"></td>
+                <td><input type="checkbox" {% if permissionJson.shipFeeTemplate.view is defined %} checked="checked" {% endif %} name="shipFeeTemplate[view]">查看</td>
+                <td><input type="checkbox" {% if permissionJson.shipFeeTemplate.new is defined %} checked="checked" {% endif %} name="shipFeeTemplate[new]">创建</td>
+                <td><input type="checkbox" {% if permissionJson.shipFeeTemplate.edit is defined %} checked="checked" {% endif %} name="shipFeeTemplate[edit]">编辑</td>
+                <td><input type="checkbox" {% if permissionJson.shipFeeTemplate.delete is defined %} checked="checked" {% endif %} name="shipFeeTemplate[delete]">删除</td>
+            </tr>
+
+            <tr>
+                <td>付款设置<input type="hidden" name="payMethodEntity[Object]"></td>
+                <td><input type="checkbox" {% if permissionJson.payMethodEntity.view is defined %} checked="checked" {% endif %} name="payMethodEntity[view]">查看</td>
+                <td><input type="checkbox" {% if permissionJson.payMethodEntity.new is defined %} checked="checked" {% endif %} name="payMethodEntity[new]">创建</td>
+                <td><input type="checkbox" {% if permissionJson.payMethodEntity.edit is defined %} checked="checked" {% endif %} name="payMethodEntity[edit]">编辑</td>
+                <td><input type="checkbox" {% if permissionJson.payMethodEntity.delete is defined %} checked="checked" {% endif %} name="payMethodEntity[delete]">删除</td>
+            </tr>
+
+            {#订单管理的权限：是否可以 查看  删除，#}
+            <tr>
+                <td>订单管理<input type="hidden" name="orderEntity[Object]"></td>
+                <td><input type="checkbox" {% if permissionJson.orderEntity.view is defined  %}checked="checked"{% endif %}  name="orderEntity[view]">查看</td>
+                <td></td>
+                <td><input type="checkbox" {% if permissionJson.orderEntity.edit is defined  %}checked="checked"{% endif %}  name="orderEntity[edit]">编辑</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <td>菜单管理<input type="hidden" name="menuEntity[Object]"></td>
+                <td><input type="checkbox" {% if permissionJson.menuEntity.view is defined  %}checked="checked"{% endif %}  name="menuEntity[view]">查看</td>
+                <td><input type="checkbox" {% if permissionJson.menuEntity.new is defined  %}checked="checked"{% endif %}  name="menuEntity[new]">创建</td>
+                <td><input type="checkbox" {% if permissionJson.menuEntity.edit is defined  %}checked="checked"{% endif %}  name="menuEntity[edit]">编辑</td>
+                <td><input type="checkbox" {% if permissionJson.menuEntity.delete is defined  %}checked="checked"{% endif %}  name="menuEntity[delete]">删除</td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+            <tr>
+                <td>评论类型管理<input type="hidden" name="commentTypeEntity[Object]"></td>
+                <td><input type="checkbox" {% if permissionJson.commentTypeEntity.view is defined %}checked="checked"{% endif %} name="commentTypeEntity[view]">查看</td>
+                <td><input type="checkbox" {% if permissionJson.commentTypeEntity.new is defined %}checked="checked"{% endif %} name="commentTypeEntity[new]">创建</td>
+                <td><input type="checkbox" {% if permissionJson.commentTypeEntity.edit is defined %}checked="checked"{% endif %} name="commentTypeEntity[edit]">编辑</td>
+                <td><input type="checkbox" {% if permissionJson.commentTypeEntity.delete is defined %}checked="checked"{% endif %} name="commentTypeEntity[delete]">删除</td>
+            </tr>
+
+            <tr>
+                <td>评论管理<input type="hidden" name="commentEntity[Object]"></td>
+                <td><input type="checkbox" {% if permissionJson.commentEntity.view is defined %}checked="checked"{% endif %} name="commentEntity[view]">查看</td>
+                <td></td>
+                {#<td><input type="checkbox" {% if permissionJson.commentEntity.new is defined %}checked="checked"{% endif %} name="commentEntity[new]">创建</td>#}
+                <td><input type="checkbox" {% if permissionJson.commentEntity.edit is defined %}checked="checked"{% endif %} name="commentEntity[edit]">编辑</td>
+                <td><input type="checkbox" {% if permissionJson.commentEntity.delete is defined %}checked="checked"{% endif %} name="commentEntity[delete]">删除</td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+            <tr>
+                <td>表单类型管理<input type="hidden" name="contactFormTypeEntity[Object]"></td>
+                <td><input type="checkbox" {% if permissionJson.contactFormTypeEntity.view is defined  %}checked="checked"{% endif %} name="contactFormTypeEntity[view]">查看</td>
+                <td><input type="checkbox" {% if permissionJson.contactFormTypeEntity.new is defined  %}checked="checked"{% endif %} name="contactFormTypeEntity[new]">创建</td>
+                <td><input type="checkbox" {% if permissionJson.contactFormTypeEntity.edit is defined  %}checked="checked"{% endif %} name="contactFormTypeEntity[edit]">编辑</td>
+                <td><input type="checkbox" {% if permissionJson.contactFormTypeEntity.delete is defined  %}checked="checked"{% endif %}name="contactFormTypeEntity[delete]">删除</td>
+            </tr>
+
+            <tr>
+                <td>表单内容管理<input type="hidden" name="contactFormEntity[Object]"></td>
+                <td><input type="checkbox" {% if permissionJson.contactFormEntity.view is defined %}checked="checked"{% endif %} name="contactFormEntity[view]">查看</td>
+                <td></td>
+                {#<td><input type="checkbox" {% if permissionJson.contactFormEntity.new is defined %}checked="checked"{% endif %} name="contactFormEntity[new]">创建</td>#}
+                <td><input type="checkbox" {% if permissionJson.contactFormEntity.edit is defined %}checked="checked"{% endif %} name="contactFormEntity[edit]">编辑</td>
+                <td><input type="checkbox" {% if permissionJson.contactFormEntity.delete is defined %}checked="checked"{% endif %} name="contactFormEntity[delete]">删除</td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+            <tr>
+                <td>用户管理<input type="hidden" name="userEntity[Object]"></td>
+                <td><input type="checkbox" {% if permissionJson.userEntity.view is defined  %}checked="checked"{% endif %}  name="userEntity[view]">查看</td>
+                <td><input type="checkbox" {% if permissionJson.userEntity.new is defined  %}checked="checked"{% endif %}  name="userEntity[new]">创建</td>
+                <td><input type="checkbox" {% if permissionJson.userEntity.edit is defined  %}checked="checked"{% endif %}  name="userEntity[edit]">编辑</td>
+                <td><input type="checkbox" {% if permissionJson.userEntity.delete is defined  %}checked="checked"{% endif %}  name="userEntity[delete]">删除</td>
+            </tr>
+
+            <tr>
+                <td>用户权限<input type="hidden" name="userGroupEntity[Object]"></td>
+                <td><input type="checkbox" {% if permissionJson.userGroupEntity.view is defined  %}checked="checked"{% endif %}  name="userGroupEntity[view]">查看</td>
+                <td><input type="checkbox" {% if permissionJson.userGroupEntity.new is defined  %}checked="checked"{% endif %} name="userGroupEntity[new]">创建</td>
+                <td><input type="checkbox" {% if permissionJson.userGroupEntity.edit is defined  %}checked="checked"{% endif %} name="userGroupEntity[edit]">编辑</td>
+                <td><input type="checkbox" {% if permissionJson.userGroupEntity.delete is defined  %}checked="checked"{% endif %} name="userGroupEntity[delete]">删除</td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+            <tr>
+                <td>系统设置<input type="hidden" name="systemEntity[Object]"></td>
+                <td><input type="checkbox" {% if permissionJson.systemEntity.view is defined  %}checked="checked"{% endif %} name="systemEntity[view]">查看</td>
+                <td></td>
+                <td><input type="checkbox" {% if permissionJson.systemEntity.edit is defined  %}checked="checked"{% endif %} name="systemEntity[edit]">编辑</td>
+                <td></td>
+            </tr>
+
+            </tbody>
+        </table>
+        <div class="col-6">
+
+            <button type="button" id="uncheck_all" class="btn btn-sm btn-primary">取消全选</button>
+            <button type="button" id="check_all" class="btn btn-sm btn-primary">全选</button>
+            <button type="submit" class="btn btn-sm btn-primary">提交</button>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+{% block custom_javascripts %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#check_all").on("click",function(e){
+                $("input[type=checkbox]").attr("checked","checked");
+            });
+            $("#uncheck_all").on("click",function(e){
+                $("input[type=checkbox]").removeAttr("checked");
+            });
+        });
+    </script>
+{% endblock %}
+

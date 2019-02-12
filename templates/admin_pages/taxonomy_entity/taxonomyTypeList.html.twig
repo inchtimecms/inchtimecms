@@ -1,0 +1,62 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}添加分类词汇{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">添加分类词汇</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="col-xl-12">
+
+        <!--begin::Portlet-->
+        <div class="m-portlet">
+            <div class="m-portlet__head">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+                        <h3 class="m-portlet__head-text">
+                            选择分类标签
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="m-portlet__body">
+                <!--begin::Section-->
+                <div class="m-section">
+                    <div class="m-section__content">
+                        <table class="table">
+                            <tbody>
+
+                            {% for taxonomyTypeEntity in taxonomyTypeEntitys %}
+                                {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                                or app.user.userPermissionGroupEntity.permissionJson.taxonomyEntity[taxonomyTypeEntity.taxonomyAlias].new is defined %}
+                                <tr>
+                                    <td>
+                                        <h5><a href="{{ path("taxonomy_entity_new_page",{'taxonomyTypeEntity_Id': taxonomyTypeEntity.id }) }}" >
+                                                {{ taxonomyTypeEntity.taxonomyName }}</a></h5>
+                                        <p>{{ taxonomyTypeEntity.taxonomyDesc }}</p>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!--end::Section-->
+            </div>
+            <!--end::Form-->
+        </div>
+
+        <!--end::Portlet-->
+
+    </div>
+
+
+{% endblock %}

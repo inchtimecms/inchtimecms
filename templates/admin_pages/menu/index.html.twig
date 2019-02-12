@@ -1,0 +1,434 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}菜单管理{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">菜单管理</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="col-12">
+        <div class="m-portlet">
+            <div class="m-portlet__head">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+                        <form class="form-inline" action="{{ path("menu") }}" method="get">
+                            <label>选择要编辑的菜单: </label>
+                            <select name="menu" class="js-menu-select form-control m-input m--margin-left-10">
+                                {% for menu in menus %}
+                                    <option value="{{ menu.id }}" {% if app.request.get("menu") == menu.id %}selected="selected"{% endif %}>{{ menu.menuName }}</option>
+                                {% endfor %}
+                            </select>
+                            <input class="btn btn-sm btn-secondary m--margin-left-10" type="submit" value="选择">
+                            {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                            or app.user.userPermissionGroupEntity.permissionJson.menuEntity.new is defined %}
+                                <span class="m--margin-left-10">您还可以<a href="{{ path('menu_new') }}" id="js-create-menu">创建新菜单</a> .</span>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-4">
+        <div class="m-portlet">
+            <div class="m-portlet__body">
+
+                <!--begin::Section-->
+                <div class="m-accordion m-accordion--bordered m-accordion--solid" id="m_accordion_4" role="tablist">
+
+                    <!--begin::Item-->
+                    <div class="m-accordion__item">
+                        <div class="m-accordion__item-head collapsed" role="tab" id="m_accordion_4_item_1_head"
+                             data-toggle="collapse" href="#m_accordion_4_item_1_body" aria-expanded="false">
+                            <span class="m-accordion__item-icon"><i class="fa flaticon-interface-10"></i></span>
+                            <span class="m-accordion__item-title">内容类型</span>
+                            <span class="m-accordion__item-mode"></span>
+                        </div>
+                        <div class="m-accordion__item-body collapse" id="m_accordion_4_item_1_body" role="tabpanel"
+                             aria-labelledby="m_accordion_4_item_1_head" data-parent="#m_accordion_4" style="">
+                            <div class="m-accordion__item-content m-scrollable" data-scrollable="true"
+                                 style="height: 150px;">
+                                <div class="m-checkbox-list">
+                                    {% for contentTypeEntity in contentTypeEntitys %}
+                                    <label class="m-checkbox">
+                                        <input type="checkbox" class="content-type-url" value="{{ path('show_content_type_contents_list',{"contentTypeMachineAlias":contentTypeEntity.contentTypeMachineAlias }) }}">
+                                        <label class="content-type-name">{{ contentTypeEntity.contentTypeName }}</label>
+                                        <span></span>
+                                    </label>
+                                    {% endfor %}
+                                </div>
+                                <div class="content-type-btn m--margin-top-10">
+                                    <button class="btn-secondary btn btn-sm js-add-content-type-to-menu">添加到菜单</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--end::Item-->
+
+                    <!--begin::Item-->
+                    <div class="m-accordion__item">
+                        <div class="m-accordion__item-head collapsed" role="tab" id="m_accordion_4_item_2_head"
+                             data-toggle="collapse" href="#m_accordion_4_item_2_body" aria-expanded="false">
+                            <span class="m-accordion__item-icon"><i class="fa  flaticon-tabs"></i></span>
+                            <span class="m-accordion__item-title">分类词汇</span>
+                            <span class="m-accordion__item-mode"></span>
+                        </div>
+                        <div class="m-accordion__item-body collapse" id="m_accordion_4_item_2_body" role="tabpanel"
+                             aria-labelledby="m_accordion_4_item_2_head" data-parent="#m_accordion_4">
+                            <div class="m-accordion__item-content m-scrollable" data-scrollable="true"
+                                 style="height: 150px;">
+                                <div class="m-checkbox-list">
+                                    {% for taxonomyEntity in taxonomyEntitys %}
+                                    <label class="m-checkbox">
+                                        <input type="checkbox" class="taxonomy-word-url" value="{{ path('show_taxonomy_content_list',{"id": taxonomyEntity.id}) }}">
+                                        <label class="taxonomy-word-name">{{ taxonomyEntity.taxonomyWord }}</label>
+                                        <span></span>
+                                    </label>
+                                    {% endfor %}
+                                </div>
+                                <div class="taxonomy-type-btn m--margin-top-10">
+                                    <button class="btn-secondary btn btn-sm js-add-taxonomy-word-menu">添加到菜单</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--end::Item-->
+
+                    <!--begin::Item-->
+                    <div class="m-accordion__item">
+                        <div class="m-accordion__item-head collapsed" role="tab" id="m_accordion_4_item_3_head"
+                             data-toggle="collapse" href="#m_accordion_4_item_3_body" aria-expanded="false">
+                            <span class="m-accordion__item-icon"><i class="fa  flaticon-chat-1"></i></span>
+                            <span class="m-accordion__item-title">联系表单</span>
+                            <span class="m-accordion__item-mode"></span>
+                        </div>
+                        <div class="m-accordion__item-body collapse" id="m_accordion_4_item_3_body" role="tabpanel"
+                             aria-labelledby="m_accordion_4_item_3_head" data-parent="#m_accordion_4">
+                            <div class="m-accordion__item-content m-scrollable" data-scrollable="true"
+                                 style="height: 150px;">
+                                <div class="m-checkbox-list">
+                                    {% for contactFormTypeEntity in contactFormTypeEntitys %}
+                                        <label class="m-checkbox">
+                                            <input type="checkbox" class="contact-form-url" value="{{ path('contact_form_show',{"formTypeAlias": contactFormTypeEntity.formTypeAlias}) }}">
+                                            <label class="contact-form-name">{{ contactFormTypeEntity.formTypeName }}</label>
+                                            <span></span>
+                                        </label>
+                                    {% endfor %}
+                                </div>
+                                <div class="taxonomy-type-btn m--margin-top-10">
+                                    <button class="btn-secondary btn btn-sm js-add-contact-form-menu">添加到菜单</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--end::Item-->
+
+                    <!--begin::Item-->
+                    <div class="m-accordion__item">
+                        <div class="m-accordion__item-head collapsed" role="tab" id="m_accordion_4_item_4_head"
+                             data-toggle="collapse" href="#m_accordion_4_item_4_body" aria-expanded="false">
+                            <span class="m-accordion__item-icon"><i class="fa  flaticon-tool"></i></span>
+                            <span class="m-accordion__item-title">自定义链接</span>
+                            <span class="m-accordion__item-mode"></span>
+                        </div>
+                        <div class="m-accordion__item-body collapse" id="m_accordion_4_item_4_body" role="tabpanel"
+                             aria-labelledby="m_accordion_4_item_4_head" data-parent="#m_accordion_4">
+                            <div class="m-accordion__item-content content-wrapper">
+                                <div class="form-group m-form__group row">
+                                    <label class="col-4 col-form-label">菜单名称:</label>
+                                    <div class="col-8">
+                                        <input class="form-control m-input custom-link-name" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group m-form__group row">
+                                    <label class="col-4 col-form-label">菜单链接:</label>
+                                    <div class="col-8">
+                                        <input class="form-control m-input custom-link-url" value="http://" type="text">
+                                    </div>
+                                </div>
+                                <div class="custom-type-btn m--margin-top-10">
+                                    <button class="btn-secondary btn btn-sm js-add-custom-link-menu">添加到菜单</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--end::Item-->
+                </div>
+
+                <!--end::Section-->
+            </div>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="m-portlet">
+            <div class="m-portlet m-portlet--tab">
+                <!--begin::Form-->
+                {#<form class="m-form m-form--fit m-form--label-align-right" method="POST">#}
+
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <span class="m-portlet__head-icon m--hide">
+                                    <i class="la la-gear"></i>
+                                </span>
+                                <h3 class="m-portlet__head-text">
+                                    菜单名称:
+                                </h3>
+                                <input class="form-control m-input menu-name" name="menu:{{ menu.id }}" value="{{ menu.menuName }}">
+                            </div>
+                            <label class="m--margin-left-20">别名(必填):  {{ menu.menuAlias }}</label>
+
+                        </div>
+                    </div>
+
+                    <div class="m-portlet__body">
+                        <div class=" ">
+
+                            <div class="m-accordion m-accordion--default m-accordion--toggle-arrow m--margin-left-30 m--margin-right-30" id="m_accordion" role="tablist">
+
+                                {% for menuItemEntity in menuItemEntitys %}
+                                <!--begin::Item-->
+                                <div class="m-accordion__item m-accordion__item--info">
+                                    <div class="m-accordion__item-head collapsed" role="tab" id="m_accordion_item_{{ menuItemEntity.id }}_head"
+                                         data-toggle="collapse" href="#m_accordion_item_{{ menuItemEntity.id }}_body" aria-expanded="false">
+                                        <span class="m-accordion__item-title">{{ menuItemEntity.itemName }}</span>
+                                        <span class="m-accordion__item-mode"></span>
+                                    </div>
+                                    <div class="m-accordion__item-body collapse" id="m_accordion_item_{{ menuItemEntity.id }}_body"
+                                         role="tabpanel" aria-labelledby="m_accordion_item_{{ menuItemEntity.id }}_head" data-parent="#m_accordion">
+                                        <div class="m-accordion__item-content menu-item-wrapper">
+                                            <div class="row">
+                                                <label class="col-3 col-form-label text-left">菜单名称:</label>
+                                                <div class="col-9">
+                                                    <input class="form-control m-input menu-item-name" type="text"
+                                                           name="menuItem:{{ menuItemEntity.itemName }}" value="{{ menuItemEntity.itemName }}">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-3 col-form-label text-left">菜单链接:</label>
+                                                <div class="col-9">
+                                                    <input class="form-control m-input menu-item-url" value="{{ menuItemEntity.itemUrl }}" type="text">
+                                                </div>
+                                            </div>
+                                            {#当前菜单项的id#}
+                                            <input type="hidden" class="menu-item-id" value="{{ menuItemEntity.id }}">
+                                            {#用于菜单项排序#}
+                                            <input type="hidden" class="menu-item-rate" value="{{ menuItemEntity.itemRate }}">
+
+                                            <div class="content-type-btn m--margin-top-10">
+                                                <button class="btn-secondary btn btn-sm js-save-menu-item">保存更改</button>
+                                                <button class="btn-secondary btn btn-sm js-delete-menu-item">删除此项</button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--end::Item-->
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="m-portlet__foot m-portlet__foot--fit">
+                        <div class="m-form__actions">
+                            {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                            or app.user.userPermissionGroupEntity.permissionJson.menuEntity.edit is defined %}
+                                <button type="button" class="btn btn-primary m--margin-10 m--margin-left-20 js-save-menu">保存菜单</button>
+                            {% endif %}
+                            {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                            or app.user.userPermissionGroupEntity.permissionJson.menuEntity.delete is defined %}
+                                <button type="button" {% if menu.menuAlias == "main" %} disabled="disabled" {% endif %} class="btn btn-primary m--margin-10 js-delete-menu">删除菜单</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                {#</form>#}
+
+                <!--end::Form-->
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block custom_javascripts %}
+    <script src="{{ asset('assets/vendors/custom/jquery-ui/jquery-ui.bundle.js') }}" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        $( function() {
+            $("#m_accordion").sortable({
+                stop: function( event, ui ) {
+                    var hiddenRateInputs = $("#m_accordion").find("input.menu-item-rate");
+                    $.each(hiddenRateInputs, function( index, input){
+                        $(input).val(index); //排序修改每个input的 rate
+                        var menuItemId = $(input).prev("input.menu-item-id").val();
+                        //ajax修改每个菜单项的 rate值
+                        ajaxEditMenuItem("changeRate",menuItemId, "", "", index);
+                    });
+                }
+            });
+
+            $("#m_accordion").disableSelection();
+        } );
+
+        //添加左侧内容类型和分类词汇 到右侧
+        function addRefLinkToRight(element,nameClass,valueClass){
+            //获取已勾选的element
+            var checkboxlistElement = $(element).parent().prev(".m-checkbox-list");
+            var checkedInputs = checkboxlistElement.find("input[type=checkbox]:checked");
+            for(var i = 0; i< checkedInputs.length; i++){
+                var inputElement = checkedInputs[i];
+                var menuItemUrl = $(inputElement).val();
+                var menuItemName = $(inputElement).parent(".m-checkbox").children(nameClass).text();
+
+                ajaxCreateMenuItem(menuItemName, menuItemUrl);
+            }
+
+        }
+
+        //ajax 创建menuItemEntity
+        function ajaxCreateMenuItem(menuItemName,menuItemUrl){
+            $.ajax({
+                type: "POST",
+                url: "{{ path('menu_item_new_action') }}",
+                data: {
+                    "menuItemName": menuItemName,
+                    "menuItemUrl" : menuItemUrl,
+                    "currMenu": {{ menu.id }}
+                },
+            }).done(function(res) {
+                console.log(res);
+            });
+        }
+
+        $(".js-add-content-type-to-menu").on("click",function(e){
+            addRefLinkToRight(this,".content-type-name",".content-type-url");
+
+            window.location.reload();
+        });
+
+        $(".js-add-taxonomy-word-menu").on("click",function(e){
+            addRefLinkToRight(this,".taxonomy-word-name",".taxonomy-word-url");
+
+            window.location.reload();
+        });
+
+        $(".js-add-contact-form-menu").on("click",function(e){
+            addRefLinkToRight(this,".contact-form-name",".contact-form-url");
+
+            window.location.reload();
+        });
+
+        $(".js-add-custom-link-menu").on("click",function(e){
+            var wrapper = $(this).parent(".custom-type-btn").parent(".content-wrapper");
+            var menuItemName = $(wrapper).find("input.custom-link-name").val();
+            var menuItemUrl = $(wrapper).find("input.custom-link-url").val();
+
+            ajaxCreateMenuItem(menuItemName, menuItemUrl);
+
+            window.location.reload();
+        });
+
+        //删除菜单项
+        function ajaxDeleteMenuItem(menuItemId){
+            $.ajax({
+                type: "POST",
+                url: "{{ path('menu_item_delete_action') }}",
+                data: {
+                    "menuItemId" : menuItemId
+                },
+            }).done(function(res){
+
+            });
+        }
+
+        function deleteMenuItem(element){
+            var parentElement = $(element).parent("div").parent(".menu-item-wrapper");
+            var menuItemId = $(parentElement).find("input.menu-item-id").val();
+
+            ajaxDeleteMenuItem(menuItemId);
+
+            window.location.reload();
+        }
+
+        //修改菜单项
+        function ajaxEditMenuItem(changeType, menuItemId, menuItemName, menuItemUrl, menuItemRate){
+            $.ajax({
+                type: "POST",
+                url: "{{ path('menu_item_edit_action') }}",
+                data: {
+                    "changeType": changeType,
+                    "menuItemId" : menuItemId,
+                    "menuItemName": menuItemName,
+                    "menuItemUrl" : menuItemUrl,
+                    "menuItemRate" : menuItemRate
+                },
+            }).done(function(res){
+
+            });
+        }
+        function editMenuItem(element){
+            var parentElement = $(element).parent("div").parent(".menu-item-wrapper");
+            var menuItemName = $(parentElement).find("input.menu-item-name").val();
+            var menuItemUrl = $(parentElement).find("input.menu-item-url").val();
+            var menuItemId = $(parentElement).find("input.menu-item-id").val();
+
+            //修改menuItem 标题和url信息
+            ajaxEditMenuItem("changeInfo",menuItemId, menuItemName, menuItemUrl, "");
+
+        }
+
+        //保存菜单项事件
+        $(".js-save-menu-item").on("click",function(e){
+            editMenuItem(this);
+        });
+
+        //删除菜单项事件
+        $(".js-delete-menu-item").on("click",function(e){
+            deleteMenuItem(this);
+        });
+
+
+        //保存菜单 和 删除菜单
+        function ajaxEditMenu(menuId,menuName){
+            $.ajax({
+                type: "POST",
+                url: "{{ path('menu_edit_action') }}",
+                data: {
+                    "menuId": menuId,
+                    "menuName": menuName
+                },
+            }).done(function(res){
+                window.location.reload();
+            });
+        }
+        $(".js-save-menu").on("click", function(e){
+            var menuName = $("input.menu-name").val();
+            ajaxEditMenu("{{ menu.id }}",menuName);
+
+        });
+
+        $(".js-delete-menu").on("click", function(e){
+            $.ajax({
+                type: "POST",
+                url: "{{ path('menu_delete_action') }}",
+                data: {
+                    "menuId": {{ menu.id }}
+                },
+            }).done(function(res){
+                window.location.href = "{{ path("menu") }}";
+            });
+
+        });
+    </script>
+{% endblock %}

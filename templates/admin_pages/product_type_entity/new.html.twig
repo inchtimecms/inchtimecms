@@ -1,0 +1,292 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}添加商品类型{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">添加商品类型</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="col-md-12">
+        <!--begin::Portlet-->
+        <div class="m-portlet m-portlet--tab">
+            <!--begin::Form-->
+            <form class="m-form m-form--fit m-form--label-align-right"
+                  action={{ path("product_type_entity_new_action") }} method="POST">
+                <div class="m-portlet__body">
+                    <div class="form-group m-form__group m--margin-top-10">
+                        <div class="alert m-alert m-alert--default" role="alert">
+                            添加您的商品类型，首先根据您的实际需求创建内容类型,内容类型里必须包含至少一个图像字段用于主图,一个原价字段(小数),一个现价字段(小数),上下架状态字段(布尔)。
+                        </div>
+                    </div>
+                    <div class="form-group m-form__group form-inline">
+                        <label for="">商品类型名称(必填)：</label>
+                        <input type="text" class="form-control m-input" required="required" name="productTypeName">
+                    </div>
+                    <div class="form-group m-form__group form-inline">
+                        <label for="" id="">机器别名(必填,不可重复)：</label>
+                        <input type="text" class="form-control m-input" required="required" name="productTypeAlias">
+                    </div>
+                    <div class="form-group m-form__group form-inline">
+                        <label for="">商品类型描述：</label>
+                        <textarea class="form-control m-input" rows="3" name="productTypeDesc"></textarea>
+                    </div>
+                    <div class="form-group m-form__group form-inline">
+                        <label for="">引用内容类型(选定后不可修改)：</label>
+                        <select class="form-control" id="refContentType" required="required" name="refContentType">
+                            {% for item in contentTypeEntitys %}
+                                <option value="{{ item.id }}">{{ item.contentTypeName }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group m-form__group form-inline">
+                        <label for="">引用主图字段（必选,至少选一个）：</label>
+                        <div class="m-checkbox-inline" id="refFieldForPic">
+                        </div>
+                    </div>
+
+                    <div class="form-group m-form__group form-inline">
+                        <label for="">引用原价字段：</label>
+                        <select class="form-control" id="refFieldForPrice" name="refFieldForPrice">
+
+                        </select>
+                    </div>
+
+                    <div class="form-group m-form__group form-inline">
+                        <label for="">引用现价字段：</label>
+                        <select class="form-control" id="refFieldForDiscountPrice" name="refFieldForDiscountPrice">
+
+                        </select>
+                    </div>
+
+                    <div class="form-group m-form__group form-inline">
+                        <label for="">引用上下架状态字段：</label>
+                        <select class="form-control" id="refFieldForSaleStatus" name="refFieldForSaleStatus">
+
+                        </select>
+                    </div>
+
+                    <div class="form-group m-form__group" >
+                        <label>设置销售属性（必填一组）：</label>
+                        <div class="alert m-alert m-alert--default" role="alert">
+                            添加此商品类型的销售属性。系统默认第一组属性可以添加缩略图,请为第一组属性填写合适的适合添加缩略图的属性。<br>
+                            例如:可以为颜色添加缩略图,却不能为尺码添加缩略图,则把颜色填入第一组销售属性中。
+                        </div>
+
+                        <div class="saleprop-group">
+                            <div class="form-group m-form__group form-inline input-group-sm">
+                                <label for="">销售属性组名：</label>
+                                <input type="text" required="required" class="form-control m-input sale-prop-group" name="salepropgroup-1[title]">
+                            </div>
+                            <div class="form-group m-form__group form-inline input-group-sm sale-prop-wrapper">
+                                <label for="">销售属性1：</label>
+                                <input type="text" required="required" class="form-control m-input" name="salepropgroup-1[value][1]">
+                            </div>
+
+                            <button type="button" class="btn btn-sm btn-secondary m--margin-20 add-prop-btn">添加销售属性</button>
+
+                        </div>
+
+                        <button type="button" class="btn btn-sm btn-primary m--margin-20 add-group-btn">添加属性分组</button>
+                    </div>
+
+                    {#<div class="form-group m-form__group form-inline">#}
+                        {#<label for="">付款方式：</label>#}
+                        {#{% for payMethodEntity in payMethodEntitys %}#}
+
+                        {#<label class="m-checkbox">#}
+                            {#<input type="checkbox" name="paymethod-{{ loop.index }}" value="{{ payMethodEntity.id }}">{{ payMethodEntity.payMethodName }}#}
+                            {#<span></span>#}
+                        {#</label>#}
+                        {#{% endfor %}#}
+
+                    {#</div>#}
+
+                    <div class="form-group m-form__group form-inline">
+                        <label for="">运费模板：</label>
+                        <select class="form-control" id="shipfeetemplate" name="shipfeetemplate">
+                        {% for shipFeeTemplateEntity in shipFeeTemplateEntitys %}
+                            <option value="{{ shipFeeTemplateEntity.id }}">{{ shipFeeTemplateEntity.templateName }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group m-form__group form-inline">
+                        <label for="">是否为实物：</label>
+                        <div class="m-radio-inline" id="boolRealOrVirtual">
+                            <label class="m-radio">
+                                <input type="radio" name="boolRealOrVirtual" value="1" checked > 实物
+                                <span></span>
+                            </label>
+                            <label class="m-radio">
+                                <input type="radio" name="boolRealOrVirtual" value="0"> 虚拟物品
+                                <span></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group m-form__group form-inline">
+                        <label for="">是否需要发货：</label>
+                        <div class="m-radio-inline" id="boolNeedShip">
+                            <label class="m-radio">
+                                <input type="radio" name="boolNeedShip" value="1" checked > 需要发货
+                                <span></span>
+                            </label>
+                            <label class="m-radio">
+                                <input type="radio" name="boolNeedShip" value="0"> 不需要发货
+                                <span></span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="m-portlet__foot m-portlet__foot--fit">
+                    <div class="m-form__actions">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token("add_product_type") }}" >
+                        <button id="addProductTypeEntity" class="btn btn-primary">确定</button>
+                    </div>
+                </div>
+            </form>
+
+            <!--end::Form-->
+        </div>
+
+        <!--end::Portlet-->
+
+    </div>
+
+{% endblock %}
+
+{% block custom_javascripts %}
+    <script type="text/javascript">
+        var fieldTypeArrays = new Array();
+        $(document).ready(function () {
+
+            //页面加载完成后,把所有内容类型的所有字段存到一个array数组中
+            {% for contentTypeEntity in contentTypeEntitys %}
+                {% for fieldTypeEntity in contentTypeEntity.fieldsTypeEntitys %}
+                fieldTypeArrays.push({
+                    contentTypeId:'{{ contentTypeEntity.id }}',
+                    fieldTypeEntityId: '{{ fieldTypeEntity.id }}',
+                    fieldName: '{{ fieldTypeEntity.fieldName }}',
+                    fieldMachineAlias:'{{ fieldTypeEntity.fieldMachineAlias }}',
+                    fieldTypeLabel: '{{ fieldTypeEntity.fieldTypeValue.fieldValueTypeName }}' //引用的字段对应的名称
+                });
+                {% endfor %}
+            {% endfor %}
+            //获取当前引用的内容类型id,把当前内容类型下的所有字段添加到select中
+            var currContentTypeId = $("#refContentType").find("option:selected").val();
+            //添加内容类型的字段
+            var decimalOptions = addOption(currContentTypeId, fieldTypeArrays, "小数");
+            $("#refFieldForPrice, #refFieldForDiscountPrice").append(decimalOptions);
+            var boolOptions = addOption(currContentTypeId, fieldTypeArrays, "布尔值");
+            $("#refFieldForSaleStatus").append(boolOptions);
+            //添加内容类型的主图的字段
+            var checkboxLabels = addCheckbox(currContentTypeId, fieldTypeArrays, "图像");
+            $("#refFieldForPic").append(checkboxLabels);
+
+            //添加销售属性按钮事件
+            $(".add-prop-btn").click(function(){
+                addsalepropinput(this);
+            });
+            //添加销售属性分组事件
+            $(".add-group-btn").click(function(){
+                addsalepropgroup(this);
+            });
+
+        });
+
+        //把对应的类型的option添加到对应的字段上
+        function addOption(contentTypeId, fieldTypeArrays, fieldTypeLabel) {
+            var options ="";
+            for (var i = 0; i < fieldTypeArrays.length; i++) {
+
+                if(fieldTypeArrays[i]["contentTypeId"] === contentTypeId
+                    && fieldTypeArrays[i]["fieldTypeLabel"] === fieldTypeLabel ){
+                    options = options + "<option value='"+ fieldTypeArrays[i]["fieldMachineAlias"] +"'>"
+                        + fieldTypeArrays[i]["fieldName"]  +"</option>";
+                }
+            }
+            return options;
+        }
+
+        //把对应的类型的checkbox添加到对应的字段上
+        function addCheckbox(contentTypeId, fieldTypeArrays, fieldTypeLabel) {
+            var htmls ="";
+            for (var i = 0; i < fieldTypeArrays.length; i++) {
+
+                if(fieldTypeArrays[i]["contentTypeId"] === contentTypeId
+                    && fieldTypeArrays[i]["fieldTypeLabel"] === fieldTypeLabel ){
+                    htmls = htmls + '<label class="m-checkbox">' +
+                        '<input type="checkbox" name="refFieldForPic[]" value="'+ fieldTypeArrays[i]["fieldMachineAlias"] +'"> ' + fieldTypeArrays[i]["fieldName"] +
+                        '<span></span></label>';
+                }
+            }
+            return htmls;
+        }
+
+        //当引用内容类型修改的时候
+        $("#refContentType").change(function(){
+            $("#refFieldForPrice, #refFieldForDiscountPrice, #refFieldForSaleStatus").empty();
+            var currContentTypeId = $("#refContentType").find("option:selected").val();
+            //添加内容类型的字段
+            var decimalOptions = addOption(currContentTypeId, fieldTypeArrays, "小数");
+            $("#refFieldForPrice, #refFieldForDiscountPrice").append(decimalOptions);
+            var boolOptions = addOption(currContentTypeId, fieldTypeArrays, "布尔值");
+            $("#refFieldForSaleStatus").append(boolOptions);
+            //添加内容类型的主图的字段
+            var checkboxLabels = addCheckbox(currContentTypeId, fieldTypeArrays, "图像");
+            $("#refFieldForPic").append(checkboxLabels);
+        });
+
+        //添加销售属性按钮事件
+        function addsalepropinput(element){
+            //先获取当前有几个group了
+            var currentPropsGroup = $(element).parent(".saleprop-group").find("input.sale-prop-group").attr("name");
+            var currentPropsGroupName = currentPropsGroup.substr(0,15);
+            //先获取当前有几个input了
+            var currentPropsNum = $(element).parent(".saleprop-group").children(".sale-prop-wrapper").length;
+            var newPropNum = currentPropsNum + 1;
+            //添加html
+            var salePropInput = '<div class="form-group m-form__group form-inline input-group-sm sale-prop-wrapper">' +
+                    '<label >销售属性'+ newPropNum +'：</label>' +
+                    '<input type="text" class="form-control m-input" name='+ currentPropsGroupName +'[value]['+ newPropNum +']>'+
+                '</div>';
+
+            $(element).before(salePropInput);
+        }
+
+        //添加销售属性分组
+        function addsalepropgroup(element){
+            //先获取当前有几个group了
+            var currentPropsGroup = $(".saleprop-group").length;
+            if(currentPropsGroup >= 2 ){
+                alert("最多只能添加2个销售属性分组!")
+                return;
+            }
+            var newGroupNum = currentPropsGroup + 1;
+            var saleGroup = '<div class="saleprop-group">' +
+                '<div class="form-group m-form__group form-inline input-group-sm">'+
+                '<label for="">销售属性组名：</label>'+
+                '<input type="text" class="form-control m-input sale-prop-group" name="salepropgroup-'+ newGroupNum +'[title]">'+
+                '</div>'+
+                '<div class="form-group m-form__group form-inline input-group-sm sale-prop-wrapper">'+
+                '<label for="">销售属性1：</label>'+
+                '<input type="text" class="form-control m-input" name="salepropgroup-'+ newGroupNum +'[value][1]" >'+
+                '</div>'+
+                '<button type="button" onclick="addsalepropinput(this);" class="btn btn-sm btn-secondary m--margin-20 add-prop-btn">添加销售属性</button>'+
+                '</div>';
+            $(element).before(saleGroup);
+        }
+
+    </script>
+{% endblock %}

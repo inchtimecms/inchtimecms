@@ -1,0 +1,82 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}用户组列表{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">用户组列表</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th><input type="checkbox" class="form-checkbox" id="check_all_contents" title="选择此表中的所有行"></th>
+            <th>#</th>
+            <th>用户组</th>
+            <th>用户组别名</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for userPermissionGroup in userPermissionGroups %}
+            <tr>
+                <td><input type="checkbox" class="form-checkbox" name=""></td>
+                <td>{{ loop.index }}</td>
+                <td>{{ userPermissionGroup.groupName }}</td>
+                <td>{{ userPermissionGroup.groupAlias }}</td>
+                <td>
+                {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                or app.user.userPermissionGroupEntity.permissionJson.userGroupEntity.edit is defined %}
+                    <a href="{{ path('edit_user_permission_group',{"id":userPermissionGroup.id }) }}">编辑权限</a>
+                {% endif %}
+                {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                or app.user.userPermissionGroupEntity.permissionJson.userGroupEntity.delete is defined %}
+                    <a data-toggle="modal" data-target="#deleteModal_{{ userPermissionGroup.id }}"
+                               href="">删除</a>
+                {% endif %}
+                </td>
+            </tr>
+            <!-- 点删除按钮时弹出对话框提醒一下 -->
+            <div class="modal fade" id="deleteModal_{{ userPermissionGroup.id }}" tabindex="-1" role="dialog"
+                 aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">删除当前用户组 {{ userPermissionGroup.groupName }}？</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            您将要删除用户组：{{ userPermissionGroup.groupName }} .删除用户组后组内的用户将不能管理后台.
+                            确定要这样做吗？
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                            <a href="{{ path('delete_user_permission_group',{"id":userPermissionGroup.id }) }}">
+                                <button type="button" class="btn btn-primary" >确定</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <tr>
+                <td colspan="5">还没有任何用户组。</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if "ROLE_SUPER_ADMIN" in app.user.roles
+    or app.user.userPermissionGroupEntity.permissionJson.userGroupEntity.new is defined %}
+        <a href="{{ path('add_user_permission_group') }}">添加用户组</a>
+    {% endif %}
+
+{% endblock %}

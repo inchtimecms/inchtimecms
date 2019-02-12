@@ -1,0 +1,96 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}运费模板设置{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">运费模板设置</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    {% for shipFeeTemplateEntity in pagination %}
+
+        <div class="ship_template_head ship_mlr">
+            <h5 class="ship_title d-inline">{{ shipFeeTemplateEntity.templateName }}</h5>
+            <div class="d-inline float-right">
+                {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                or app.user.userPermissionGroupEntity.permissionJson.shipFeeTemplate.edit is defined %}
+                    <a href="{{ path('ship_fee_template_entity_edit',{"id":shipFeeTemplateEntity.id }) }}" >编辑</a>
+                {% endif %}
+                {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                or app.user.userPermissionGroupEntity.permissionJson.shipFeeTemplate.delete is defined %}
+                    <a href="{{ path('ship_fee_template_entity_delete',{"id":shipFeeTemplateEntity.id }) }}" >删除</a>
+                {% endif %}
+            </div>
+        </div>
+        <table class="table table-bordered m-table m-table--border-brand m-table--head-bg-brand ship_mlr">
+            <thead>
+            <tr>
+                <th>运送方式</th>
+                <th>运送到</th>
+                <th>首件(个)</th>
+                <th>运费(元)</th>
+                <th>续件(个)</th>
+                <th>续费(元)</th>
+            </tr>
+            </thead>
+            <tbody>
+            {#如果包邮#}
+            {% if shipFeeTemplateEntity.shipIsFree == true %}
+                {% set data = shipFeeTemplateEntity.shipMethods %}
+                {% for item in data %}
+                    {% for key,body in item %}
+                        <tr>
+                            {% if key == "shipexpress" and body.shipexpress == 1 %}
+                                <td>快递</td>
+                            {% elseif key == "shipems" and body.shipems == 1%}
+                                <td>ems</td>
+                            {% endif %}
+                            <td>国内</td>
+                            <td>1</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>0</td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            {% else  %}
+                {% set data = shipFeeTemplateEntity.shipMethods|json_decode %}
+                {% for item in data %}
+                    {% for key,body in item %}
+                        <tr>
+                            {% if key == "shipexpress" and body.shipexpress == 1 %}
+                                <td>快递</td>
+                                <td>国内</td>
+                                <td>{{ body.defaultnum }}</td>
+                                <td>{{ body.defaultfee }}</td>
+                                <td>{{ body.addnum }}</td>
+                                <td>{{ body.addfee }}</td>
+                            {% elseif key == "shipems" and body.shipems == 1%}
+                                <td>ems</td>
+                                <td>国内</td>
+                                <td>{{ body.defaultnum }}</td>
+                                <td>{{ body.defaultfee }}</td>
+                                <td>{{ body.addnum }}</td>
+                                <td>{{ body.addfee }}</td>
+                            {% endif %}
+
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+
+            {% endif %}
+
+            </tbody>
+        </table>
+    {% endfor %}
+    {% if "ROLE_SUPER_ADMIN" in app.user.roles
+    or app.user.userPermissionGroupEntity.permissionJson.shipFeeTemplate.new is defined %}
+        <a class="ship_mlr" href="{{ path('ship_fee_template_entity_new') }}">添加新的模板</a>
+    {% endif %}
+{% endblock %}

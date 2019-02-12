@@ -1,0 +1,56 @@
+{#
+/**
+ * @file
+ * Twitter Bootstrap v4-beta.2 Sliding pagination control implementation.
+ *
+ * View that can be used with the pagination module
+ * from the Twitter Bootstrap CSS Toolkit
+ * https://getbootstrap.com/docs/4.0/components/pagination/
+ *
+ */
+#}
+{% if pageCount > 1 %}
+        {% set classAlign = (align is not defined) ? '' : align=='center' ? ' justify-content-center' : (align=='right' ? ' justify-content-end' : '') %}
+        {% set classSize = (size is not defined) ? '' : size=='large' ? ' pagination-lg' : (size=='small' ? ' pagination-sm' : '') %}
+
+            {% if previous is defined %}
+                <a class="flex-c-m how-pagination1 trans-04 m-all-7" rel="prev" href="{{ path(route, query|merge({(pageParameterName): previous})) }}">&laquo;&nbsp;{{ 'label_previous'|trans({}, 'KnpPaginatorBundle') }}</a>
+            {% else %}
+                <a class="flex-c-m how-pagination1 trans-04 m-all-7 active-pagination1">&laquo;&nbsp;{{ 'label_previous'|trans({}, 'KnpPaginatorBundle') }}</a>
+            {% endif %}
+
+            {% if startPage > 1 %}
+                    <a class="flex-c-m how-pagination1 trans-04 m-all-7" href="{{ path(route, query|merge({(pageParameterName): 1})) }}">1</a>
+                {% if startPage == 3 %}
+                    <a class="flex-c-m how-pagination1 trans-04 m-all-7" href="{{ path(route, query|merge({(pageParameterName): 2})) }}">2</a>
+                {% elseif startPage != 2 %}
+                    <a class="flex-c-m how-pagination1 trans-04 m-all-7 disabled">&hellip;</a>
+                {% endif %}
+            {% endif %}
+
+            {% for page in pagesInRange %}
+                {% if page != current %}
+                    <a class="flex-c-m how-pagination1 trans-04 m-all-7" href="{{ path(route, query|merge({(pageParameterName): page})) }}">{{ page }}</a>
+                {% else %}
+                    <a class="flex-c-m how-pagination1 trans-04 m-all-7 active-pagination1">{{ page }}</a>
+                {% endif %}
+
+            {% endfor %}
+
+            {% if pageCount > endPage %}
+                {% if pageCount > (endPage + 1) %}
+                    {% if pageCount > (endPage + 2) %}
+                        <a class="flex-c-m how-pagination1 trans-04 m-all-7 disabled">&hellip;</a>
+                    {% else %}
+                        <a class="flex-c-m how-pagination1 trans-04 m-all-7" href="{{ path(route, query|merge({(pageParameterName): (pageCount - 1)})) }}">{{ pageCount -1 }}</a>
+                    {% endif %}
+                {% endif %}
+                <a class="flex-c-m how-pagination1 trans-04 m-all-7" href="{{ path(route, query|merge({(pageParameterName): pageCount})) }}">{{ pageCount }}</a>
+            {% endif %}
+
+            {% if next is defined %}
+                <a class="flex-c-m how-pagination1 trans-04 m-all-7" rel="next" href="{{ path(route, query|merge({(pageParameterName): next})) }}">{{ 'label_next'|trans({}, 'KnpPaginatorBundle') }}&nbsp;&raquo;</a>
+            {% else %}
+                <a class="flex-c-m how-pagination1 trans-04 m-all-7 active-pagination1">{{ 'label_next'|trans({}, 'KnpPaginatorBundle') }}&nbsp;&raquo;</a>
+            {% endif %}
+{% endif %}

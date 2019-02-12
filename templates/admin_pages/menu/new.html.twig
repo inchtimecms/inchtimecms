@@ -1,0 +1,180 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}添加菜单{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">添加菜单</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <div class="col-12">
+        <div class="m-portlet">
+            <div class="m-portlet__head">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+                        <form class="form-inline" action="{{ path("menu") }}" method="get">
+                            <label>选择要编辑的菜单: </label>
+                            <select name="menu" class="js-menu-select form-control m-input m--margin-left-10">
+                                {% for menu in menus %}
+                                    <option value="{{ menu.id }}">{{ menu.menuName }}</option>
+                                {% endfor %}
+                            </select>
+                            <input class="btn btn-sm btn-secondary m--margin-left-10" type="submit" value="选择">
+                            <span class="m--margin-left-10">您还可以<a href="{{ path('menu_new') }}" id="js-create-menu">创建新菜单</a> .</span>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-4">
+        <div class="m-portlet">
+            <div class="m-portlet__body">
+
+                <!--begin::Section-->
+                <div class="m-accordion m-accordion--bordered m-accordion--solid" id="m_accordion_4" role="tablist">
+
+                    <!--begin::Item-->
+                    <div class="m-accordion__item">
+                        <div class="m-accordion__item-head collapsed" role="tab" id="m_accordion_4_item_1_head"
+                             data-toggle="collapse" href="#m_accordion_4_item_1_body" aria-expanded="false">
+                            <span class="m-accordion__item-icon"><i class="fa flaticon-user-ok"></i></span>
+                            <span class="m-accordion__item-title">内容类型</span>
+                            <span class="m-accordion__item-mode"></span>
+                        </div>
+                        <div class="m-accordion__item-body collapse" id="m_accordion_4_item_1_body" role="tabpanel"
+                             aria-labelledby="m_accordion_4_item_1_head" data-parent="#m_accordion_4" style="">
+                            <div class="m-accordion__item-content m-scrollable" data-scrollable="true"
+                                 style="height: 150px;">
+                                <div class="m-checkbox-list">
+                                    {% for contentTypeEntity in contentTypeEntitys %}
+                                    <label class="m-checkbox">
+                                        <input type="checkbox" class="content-type-url" value="{{ path('show_content_type_contents_list',{"contentTypeMachineAlias":contentTypeEntity.contentTypeMachineAlias }) }}">
+                                        <label class="content-type-name">{{ contentTypeEntity.contentTypeName }}</label>
+                                        <span></span>
+                                    </label>
+                                    {% endfor %}
+                                </div>
+                                <div class="content-type-btn m--margin-top-10">
+                                    <button class="btn-secondary btn btn-sm js-add-content-type-to-menu">添加到菜单</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--end::Item-->
+
+                    <!--begin::Item-->
+                    <div class="m-accordion__item">
+                        <div class="m-accordion__item-head collapsed" role="tab" id="m_accordion_4_item_3_head"
+                             data-toggle="collapse" href="#m_accordion_4_item_3_body" aria-expanded="false">
+                            <span class="m-accordion__item-icon"><i class="fa  flaticon-alert-2"></i></span>
+                            <span class="m-accordion__item-title">分类词汇</span>
+                            <span class="m-accordion__item-mode"></span>
+                        </div>
+                        <div class="m-accordion__item-body collapse" id="m_accordion_4_item_3_body" role="tabpanel"
+                             aria-labelledby="m_accordion_4_item_3_head" data-parent="#m_accordion_4">
+                            <div class="m-accordion__item-content m-scrollable" data-scrollable="true"
+                                 style="height: 150px;">
+                                <div class="m-checkbox-list">
+                                    {% for taxonomyEntity in taxonomyEntitys %}
+                                    <label class="m-checkbox">
+                                        <input type="checkbox" class="taxonomy-word-url" value="{{ rootUrl }}{{ path('show_taxonomy_content_list',{"id": taxonomyEntity.id}) }}">
+                                        <label class="taxonomy-word-name">{{ taxonomyEntity.taxonomyWord }}</label>
+                                        <span></span>
+                                    </label>
+                                    {% endfor %}
+                                </div>
+                                <div class="taxonomy-type-btn m--margin-top-10">
+                                    <button class="btn-secondary btn btn-sm js-add-taxonomy-word-menu">添加到菜单</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--end::Item-->
+
+                    <!--begin::Item-->
+                    <div class="m-accordion__item">
+                        <div class="m-accordion__item-head collapsed" role="tab" id="m_accordion_4_item_2_head"
+                             data-toggle="collapse" href="#m_accordion_4_item_2_body" aria-expanded="false">
+                            <span class="m-accordion__item-icon"><i class="fa  flaticon-placeholder"></i></span>
+                            <span class="m-accordion__item-title">自定义链接</span>
+                            <span class="m-accordion__item-mode"></span>
+                        </div>
+                        <div class="m-accordion__item-body collapse" id="m_accordion_4_item_2_body" role="tabpanel"
+                             aria-labelledby="m_accordion_4_item_2_head" data-parent="#m_accordion_4">
+                            <div class="m-accordion__item-content content-wrapper">
+                                <div class="form-group m-form__group row">
+                                    <label class="col-4 col-form-label">菜单名称:</label>
+                                    <div class="col-8">
+                                        <input class="form-control m-input custom-link-name" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group m-form__group row">
+                                    <label class="col-4 col-form-label">菜单链接:</label>
+                                    <div class="col-8">
+                                        <input class="form-control m-input custom-link-url" value="http://" type="text">
+                                    </div>
+                                </div>
+                                <div class="custom-type-btn m--margin-top-10">
+                                    <button class="btn-secondary btn btn-sm js-add-custom-link-menu">添加到菜单</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--end::Item-->
+                </div>
+
+                <!--end::Section-->
+            </div>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="m-portlet">
+            <div class="m-portlet m-portlet--tab">
+                <!--begin::Form-->
+                <form class="m-form m-form--fit m-form--label-align-right" action="{{ path('menu_new_action') }}" method="POST">
+
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <span class="m-portlet__head-icon m--hide">
+                                    <i class="la la-gear"></i>
+                                </span>
+                                <h3 class="m-portlet__head-text col-2">
+                                    菜单名称:
+                                </h3>
+                                <input class="form-control m-input menu-name" name="menu-name">
+                                <label class="m--margin-left-20 col-2">别名(必填): </label>
+                                <input class="form-control m-input menu-alias" name="menu-alias" >
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="m-portlet__body">
+                        <span class="m--margin-left-30"> 请先添加菜单并保存菜单后,再在左侧添加菜单项到菜单中.</span>
+                    </div>
+                    <div class="m-portlet__foot m-portlet__foot--fit">
+                        <div class="m-form__actions">
+                            <button type="submit" class="btn btn-primary js-save-menu">保存菜单</button>
+                        </div>
+                    </div>
+                </form>
+
+                <!--end::Form-->
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

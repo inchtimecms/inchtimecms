@@ -1,0 +1,61 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}字段设置{% endblock %}
+
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">字段设置</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block content %}
+    {#{{ dump(class) }}#}
+
+    {#{{ fieldmapping }}#}
+    <div class="col-md-12">
+        <!--begin::Portlet-->
+        <div class="m-portlet m-portlet--tab">
+            <!--begin::Form-->
+            <form class="m-form m-form--fit m-form--label-align-right" method="post">
+                  {#action={{ path("field_type_entity_settings_action", {'fieldTypeEntity': fieldTypeEntity}) }} >#}
+                <div class="m-portlet__body">
+                    <div class="fields_wrapper">
+                        <div class="form-group m-form__group">
+                            {% if fieldTypeEntity.fieldTypeValueId.fieldValueTypeName == "文件" %}
+                                {#如果为文件，则限制上传的文件类型#}
+                            {% elseif fieldTypeEntity.fieldTypeValueId.fieldValueTypeName == "图片" %}
+
+
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+                <div class="m-portlet__foot m-portlet__foot--fit">
+                    <div class="m-form__actions">
+                        <button class="btn btn-primary">确定</button>
+                    </div>
+                </div>
+            </form>
+
+            <!--end::Form-->
+        </div>
+
+        <!--end::Portlet-->
+
+    </div>
+
+{% endblock %}
+
+
+
+{# 当前页面需要的js代码 #}
+{% block custom_javascripts %}
+    <script src={{ asset('assets/inchTimeJs/addNewField.js') }} type="text/javascript"></script>
+{% endblock %}

@@ -1,0 +1,132 @@
+<!-- Footer -->
+<footer class="bg3 p-t-75 p-b-32">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 col-lg-3 p-b-50">
+                <h4 class="stext-301 cl0 p-b-30">
+                    商品分类
+                </h4>
+
+                <ul>
+                    {% for productTypeEntity in baseController.allProductTypeEntities %}
+                    <li class="p-b-10">
+                        <a href="{{ path('show_product_type_products_list', {id:productTypeEntity.id}) }}" class="stext-107 cl7 hov-cl1 trans-04">
+                            {{ productTypeEntity.productTypeName }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="col-sm-6 col-lg-3 p-b-50">
+                <h4 class="stext-301 cl0 p-b-30">
+                    帮助＆服务
+                </h4>
+
+                <ul>
+                    <li class="p-b-10">
+                        <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                            订单追踪
+                        </a>
+                    </li>
+
+                    <li class="p-b-10">
+                        <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                            联系我们
+                        </a>
+                    </li>
+
+                    <li class="p-b-10">
+                        <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                            邮费说明
+                        </a>
+                    </li>
+
+                    <li class="p-b-10">
+                        <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                            FAQs
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-sm-6 col-lg-3 p-b-50">
+                <h4 class="stext-301 cl0 p-b-30">
+                    公司地址
+                </h4>
+
+                <p class="stext-107 cl7 size-201">
+                    如有任何问题，请联系：
+                    河南省洛阳市吉利区河阳路吉利中路56号，
+                    洛阳随手联科技有限公司，
+                    ＋86 13938812345
+                </p>
+
+                {#<div class="p-t-27">#}
+                    {#<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">#}
+                        {#<i class="fa fa-facebook"></i>#}
+                    {#</a>#}
+
+                    {#<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">#}
+                        {#<i class="fa fa-instagram"></i>#}
+                    {#</a>#}
+
+                    {#<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">#}
+                        {#<i class="fa fa-pinterest-p"></i>#}
+                    {#</a>#}
+                {#</div>#}
+            </div>
+
+            <div class="col-sm-6 col-lg-3 p-b-50">
+                <h4 class="stext-301 cl0 p-b-30">
+                    订阅产品信息
+                </h4>
+
+                <form>
+                    <div class="wrap-input1 w-full p-b-4">
+                        <input class="input1 bg-none plh1 stext-107 cl7" type="text" name="email" placeholder="email@example.com">
+                        <div class="focus-input1 trans-04"></div>
+                    </div>
+
+                    <div class="p-t-18">
+                        <button class="flex-c-m stext-101 cl0 size-103 bg1 bor1 hov-btn2 p-lr-15 trans-04">
+                            订阅
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="p-t-40">
+            <div class="flex-c-m flex-w p-b-18">
+                {#<a href="#" class="m-all-1">#}
+                    {#<img src="{{ asset('assets/cozastore/images/icons/icon-pay-01.png') }}" alt="ICON-PAY">#}
+                {#</a>#}
+
+                {#<a href="#" class="m-all-1">#}
+                    {#<img src="{{ asset('assets/cozastore/images/icons/icon-pay-02.png') }}" alt="ICON-PAY">#}
+                {#</a>#}
+
+                {#<a href="#" class="m-all-1">#}
+                    {#<img src="{{ asset('assets/cozastore/images/icons/icon-pay-03.png') }}" alt="ICON-PAY">#}
+                {#</a>#}
+
+                {#<a href="#" class="m-all-1">#}
+                    {#<img src="{{ asset('assets/cozastore/images/icons/icon-pay-04.png') }}" alt="ICON-PAY">#}
+                {#</a>#}
+
+                {#<a href="#" class="m-all-1">#}
+                    {#<img src="{{ asset('assets/cozastore/images/icons/icon-pay-05.png') }}" alt="ICON-PAY">#}
+                {#</a>#}
+            </div>
+
+            <p class="stext-107 cl6 txt-center">
+                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                Copyright &copy;<script>document.write(new Date().getFullYear());</script> 版权所有 | 页面模板来自 <i class="icon-heart" aria-hidden="true"></i> <a href="https://colorlib.com" target="_blank">Colorlib</a><br>
+                此网站使用<a href="http://www.seasaltlink.com/" target="_blank">InchTimeCMS 版本号: {{ system_version }}</a>构建
+            </p>
+        </div>
+    </div>
+</footer>
+
+

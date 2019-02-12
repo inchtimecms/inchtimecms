@@ -1,0 +1,276 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}添加用户组{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">添加用户组</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="col-12">
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>权限名称</th>
+                <th>允许查看</th>
+                <th>允许创建</th>
+                <th>允许编辑</th>
+                <th>允许删除</th>
+            </tr>
+            </thead>
+            <tbody>
+            {#//内容管理权限：内容是否可以添加 修改 删除，#}
+            <tr>
+                <td>内容管理<input type="hidden" name="contentEntity[Object]"></td>
+                <td><input type="checkbox" checked="checked" name="contentEntity[view]">查看</td>
+                <td><input type="checkbox" checked="checked" name="contentEntity[new]">创建</td>
+                <td></td>
+                <td></td>
+            </tr>
+            {#每个类型的内容是否可以 添加 修改 删除#}
+            {% for contentTypeEntity in contentTypeEntitys %}
+                <tr>
+                    <td>内容:{{ contentTypeEntity.contentTypeName }} <input type="hidden" name="contentEntity[{{ contentTypeEntity.contentTypeMachineAlias }}][Object]"></td>
+                    <td><input type="checkbox" checked="checked" name="contentEntity[{{ contentTypeEntity.contentTypeMachineAlias }}][view]">查看</td>
+                    <td><input type="checkbox" checked="checked" name="contentEntity[{{ contentTypeEntity.contentTypeMachineAlias }}][new]">创建</td>
+                    <td><input type="checkbox" checked="checked" name="contentEntity[{{ contentTypeEntity.contentTypeMachineAlias }}][edit]">编辑</td>
+                    <td><input type="checkbox" name="contentEntity[{{ contentTypeEntity.contentTypeMachineAlias }}][delete]">删除</td>
+                </tr>
+            {% endfor %}
+            {#//内容类型的权限：内容类型是否可以添加 修改 删除，#}
+            <tr>
+                <td></td>
+            </tr>
+
+            <tr>
+                <td>内容类型<input type="hidden" name="contentTypeEntity[Object]"></td>
+                <td><input type="checkbox" checked="checked" name="contentTypeEntity[view]">查看</td>
+                <td><input type="checkbox" checked="checked" name="contentTypeEntity[new]">创建</td>
+                {#<td><input type="checkbox" checked="checked" name="contentTypeEntity[edit]">编辑</td>#}
+                {#<td><input type="checkbox" name="contentTypeEntity[delete]">删除</td>#}
+                <td></td>
+                <td></td>
+            </tr>
+            {#每个内容类型是否可以 添加 修改 删除#}
+            {% for contentTypeEntity in contentTypeEntitys %}
+                <tr>
+                    <td>内容类型:{{ contentTypeEntity.contentTypeName }} <input type="hidden" name="contentTypeEntity[{{ contentTypeEntity.contentTypeMachineAlias }}][Object]"></td>
+                    <td><input type="checkbox" checked="checked" name="contentTypeEntity[{{ contentTypeEntity.contentTypeMachineAlias }}][view]">查看</td>
+                    <td></td>
+                    <td><input type="checkbox" checked="checked" name="contentTypeEntity[{{ contentTypeEntity.contentTypeMachineAlias }}][edit]">编辑</td>
+                    <td><input type="checkbox" name="contentTypeEntity[{{ contentTypeEntity.contentTypeMachineAlias }}][delete]">删除</td>
+                </tr>
+            {% endfor %}
+
+            <tr>
+                <td></td>
+            </tr>
+            {#//分类标签类型的权限：标签权限是否可以查看 添加 修改 删除#}
+            <tr>
+                <td>分类标签类型<input type="hidden" name="taxonomyTypeEntity[Object]"></td>
+                <td><input type="checkbox" checked="checked" name="taxonomyTypeEntity[view]">查看</td>
+                <td><input type="checkbox" checked="checked" name="taxonomyTypeEntity[new]">创建</td>
+                {#<td><input type="checkbox" checked="checked" name="taxonomyTypeEntity[edit]">编辑</td>#}
+                {#<td><input type="checkbox" name="taxonomyTypeEntity[delete]">删除</td>#}
+                <td></td>
+                <td></td>
+            </tr>
+            {#每个类型的分类标签是否可以 添加 修改 删除#}
+            {% for taxonomyTypeEntity in taxonomyTypes %}
+                <tr>
+                    <td>分类标签类型:{{ taxonomyTypeEntity.taxonomyName }} <input type="hidden" name="taxonomyTypeEntity[{{ taxonomyTypeEntity.taxonomyAlias }}][Object]"></td>
+                    <td><input type="checkbox" checked="checked" name="taxonomyTypeEntity[{{ taxonomyTypeEntity.taxonomyAlias }}][view]">查看</td>
+                    <td></td>
+                    <td><input type="checkbox" checked="checked" name="taxonomyTypeEntity[{{ taxonomyTypeEntity.taxonomyAlias }}][edit]">编辑</td>
+                    <td><input type="checkbox" name="taxonomyTypeEntity[{{ taxonomyTypeEntity.taxonomyAlias }}][delete]">删除</td>
+                </tr>
+            {% endfor %}
+
+            {#每个类型的分类标签下的词汇是否可以 添加 修改 删除#}
+            {% for taxonomyTypeEntity in taxonomyTypes %}
+                <tr>
+                    <td>分类词汇:{{ taxonomyTypeEntity.taxonomyName }} <input type="hidden" name="taxonomyEntity[{{ taxonomyTypeEntity.taxonomyAlias }}][Object]"></td>
+                    <td><input type="checkbox" checked="checked" name="taxonomyEntity[{{ taxonomyTypeEntity.taxonomyAlias }}][view]">查看</td>
+                    <td><input type="checkbox" checked="checked" name="taxonomyEntity[{{ taxonomyTypeEntity.taxonomyAlias }}][new]">创建</td>
+                    <td><input type="checkbox" checked="checked" name="taxonomyEntity[{{ taxonomyTypeEntity.taxonomyAlias }}][edit]">编辑</td>
+                    <td><input type="checkbox" name="taxonomyEntity[{{ taxonomyTypeEntity.taxonomyAlias }}][delete]">删除</td>
+                </tr>
+            {% endfor %}
+
+            <tr>
+                <td></td>
+            </tr>
+
+            <tr>
+                <td>文件管理<input type="hidden" name="fileManageEntity[Object]"></td>
+                <td><input type="checkbox" checked="checked" name="fileManageEntity[view]">查看</td>
+                <td><input type="checkbox" checked="checked" name="fileManageEntity[new]">创建</td>
+                <td><input type="checkbox" checked="checked" name="fileManageEntity[edit]">编辑</td>
+                <td><input type="checkbox" name="fileManageEntity[delete]">删除</td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+            {#//商品内容的权限：商品内容是否可以添加 修改 删除，#}
+            <tr>
+                <td>商品管理<input type="hidden" name="productContentEntity[Object]"></td>
+                <td><input type="checkbox" checked="checked" name="productContentEntity[view]">查看</td>
+                <td><input type="checkbox" checked="checked" name="productContentEntity[new]">创建</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+            {#//商品类型的权限：内容类型是否可以添加 修改 删除，#}
+            <tr>
+                <td>商品类型<input type="hidden" name="productTypeEntity[Object]"></td>
+                <td><input type="checkbox" checked="checked" name="productTypeEntity[view]">查看</td>
+                <td><input type="checkbox" checked="checked" name="productTypeEntity[new]">创建</td>
+                {#<td><input type="checkbox" checked="checked" name="productTypeEntity[edit]">编辑</td>#}
+                {#<td><input type="checkbox" name="productTypeEntity[delete]">删除</td>#}
+                <td></td>
+                <td></td>
+            </tr>
+            {% for productTypeEntity in productTypeEntitys %}
+                <tr>
+                    <td>商品类型:{{ productTypeEntity.productTypeName }}<input type="hidden" name="productTypeEntity[{{ productTypeEntity.productAlias }}][Object]"></td>
+                    <td><input type="checkbox" checked="checked" name="productTypeEntity[{{ productTypeEntity.productAlias }}][view]">查看</td>
+                    <td></td>
+                    <td><input type="checkbox" checked="checked" name="productTypeEntity[{{ productTypeEntity.productAlias }}][edit]">编辑</td>
+                    <td><input type="checkbox" name="productTypeEntity[{{ productTypeEntity.productAlias }}][delete]">删除</td>
+                </tr>
+            {% endfor %}
+
+            <tr>
+                <td></td>
+            </tr>
+
+            <tr>
+                <td>运费设置<input type="hidden" name="shipFeeTemplate[Object]"></td>
+                <td><input type="checkbox" checked="checked" name="shipFeeTemplate[view]">查看</td>
+                <td><input type="checkbox" checked="checked" name="shipFeeTemplate[new]">创建</td>
+                <td><input type="checkbox" checked="checked" name="shipFeeTemplate[edit]">编辑</td>
+                <td><input type="checkbox" name="shipFeeTemplate[delete]">删除</td>
+            </tr>
+
+            <tr>
+                <td>付款设置<input type="hidden" name="payMethodEntity[Object]"></td>
+                <td><input type="checkbox" checked="checked" name="payMethodEntity[view]">查看</td>
+                <td><input type="checkbox" checked="checked" name="payMethodEntity[new]">创建</td>
+                <td><input type="checkbox" checked="checked" name="payMethodEntity[edit]">编辑</td>
+                <td><input type="checkbox" name="payMethodEntity[delete]">删除</td>
+            </tr>
+
+
+            {#订单管理的权限：是否可以 查看  编辑，#}
+            <tr>
+                <td>订单管理<input type="hidden" name="orderEntity[Object]"></td>
+                <td><input type="checkbox" checked="checked" name="orderEntity[view]">查看</td>
+                <td></td>
+                <td><input type="checkbox" checked="checked" name="orderEntity[edit]">编辑</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <td>菜单管理<input type="hidden" name="menuEntity[Object]"></td>
+                <td><input type="checkbox" checked="checked" name="menuEntity[view]">查看</td>
+                <td><input type="checkbox" checked="checked" name="menuEntity[new]">创建</td>
+                <td><input type="checkbox" checked="checked" name="menuEntity[edit]">编辑</td>
+                <td><input type="checkbox" name="menuEntity[delete]">删除</td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+            <tr>
+                <td>表单类型管理<input type="hidden" name="contactFormTypeEntity[Object]"></td>
+                <td><input type="checkbox" checked="checked" name="contactFormTypeEntity[view]">查看</td>
+                <td><input type="checkbox" checked="checked" name="contactFormTypeEntity[new]">创建</td>
+                <td><input type="checkbox" checked="checked" name="contactFormTypeEntity[edit]">编辑</td>
+                <td><input type="checkbox" name="contactFormTypeEntity[delete]">删除</td>
+            </tr>
+
+            <tr>
+                <td>表单内容管理<input type="hidden" name="contactFormEntity[Object]"></td>
+                <td><input type="checkbox" checked="checked" name="contactFormEntity[view]">查看</td>
+                <td></td>
+                <td><input type="checkbox" checked="checked" name="contactFormEntity[edit]">编辑</td>
+                <td><input type="checkbox" name="contactFormEntity[delete]">删除</td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+            <tr>
+                <td>评论类型管理<input type="hidden" name="commentTypeEntity[Object]"></td>
+                <td><input type="checkbox" checked="checked" name="commentTypeEntity[view]">查看</td>
+                <td><input type="checkbox" checked="checked" name="commentTypeEntity[new]">创建</td>
+                <td><input type="checkbox" checked="checked" name="commentTypeEntity[edit]">编辑</td>
+                <td><input type="checkbox" name="commentTypeEntity[delete]">删除</td>
+            </tr>
+
+            <tr>
+                <td>评论管理<input type="hidden" name="commentEntity[Object]"></td>
+                <td><input type="checkbox" checked="checked" name="commentEntity[view]">查看</td>
+                <td></td>
+                <td><input type="checkbox" checked="checked" name="commentEntity[edit]">编辑</td>
+                <td><input type="checkbox" name="commentEntity[delete]">删除</td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+            <tr>
+                <td>用户管理<input type="hidden" name="userEntity[Object]"></td>
+                <td><input type="checkbox" checked="checked" name="userEntity[view]">查看</td>
+                <td><input type="checkbox" name="userEntity[new]">创建</td>
+                <td><input type="checkbox" name="userEntity[edit]">编辑</td>
+                <td><input type="checkbox" name="userEntity[delete]">删除</td>
+            </tr>
+
+            <tr>
+                <td>用户权限<input type="hidden" name="userGroupEntity[Object]"></td>
+                <td><input type="checkbox" checked="checked" name="userGroupEntity[view]">查看</td>
+                <td><input type="checkbox" name="userGroupEntity[new]">创建</td>
+                <td><input type="checkbox" name="userGroupEntity[edit]">编辑</td>
+                <td><input type="checkbox" name="userGroupEntity[delete]">删除</td>
+            </tr>
+
+            <tr>
+                <td>系统设置<input type="hidden" name="systemEntity[Object]"></td>
+                <td><input type="checkbox" checked="checked" name="systemEntity[view]">查看</td>
+                <td></td>
+                <td><input type="checkbox" name="systemEntity[edit]">编辑</td>
+                <td></td>
+            </tr>
+
+            </tbody>
+        </table>
+        <div class="col-6">
+
+            <button type="button" id="uncheck_all" class="btn btn-sm btn-primary">取消全选</button>
+            <button type="button" id="check_all" class="btn btn-sm btn-primary">全选</button>
+            <button type="submit" class="btn btn-sm btn-primary">提交</button>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+{% block custom_javascripts %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#check_all").on("click",function(e){
+                $("input[type=checkbox]").attr("checked","checked");
+            });
+            $("#uncheck_all").on("click",function(e){
+                $("input[type=checkbox]").removeAttr("checked");
+            });
+        });
+    </script>
+{% endblock %}

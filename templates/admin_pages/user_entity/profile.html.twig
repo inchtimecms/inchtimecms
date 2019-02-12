@@ -1,0 +1,93 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}用户资料{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">用户资料</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="col-12">
+        {{ form_start(userForm) }}
+        {{ form_widget(userForm) }}
+        {% if app.user != userEntity %}
+            <div class="form-group">
+                <label class="required">账号锁定</label>
+                <div class="m-radio-inline m--margin-left-10">
+                    <label class="m-radio">
+                        <input type="radio" name="enabled" required="required"
+                               {% if userEntity.enabled == false %}checked="checked"{% endif %} value=0 > 是
+                        <span></span>
+                    </label>
+                    <label class="m-radio">
+                        <input type="radio" name="enabled" required="required"
+                               {% if userEntity.enabled == true %}checked="checked"{% endif %} value=1 > 否
+                        <span></span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="required">用户组</label>
+                <select name="userPermissionGroupEntity" class="form-control">
+                    {% for userPermissionGroup in userPermissionGroups %}
+                    <option value="{{ userPermissionGroup.id }}"
+                            {% if userEntity.userPermissionGroupEntity == userPermissionGroup %}selected = "selected"{% endif %}
+                    >{{ userPermissionGroup.groupName }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+
+        <div class="form-group">
+            <label class="required">用户头像</label>
+            <div class="col-2">
+                <img src="{{ userEntity.avatar(80) }}">
+            </div>
+            <div class="col-8 m--margin-top-10">
+                <label>您可以在<a href="https://cn.gravatar.com/" target="_blank"> Gravatar </a>修改您的资料头像。</label>
+            </div>
+        </div>
+
+        {% if is_granted("ROLE_SUPER_ADMIN") or app.user == userEntity %}
+        <div class="form-group">
+            <label class="required">修改密码</label>
+            <div class="form-group m-form__group row">
+                <label class="col-2 col-form-label m--margin-left-10">新密码</label>
+                <div class="col-4">
+                    <input class="form-control m-input" minlength="8" id="new_password" type="password" name="new_password">
+                </div>
+            </div>
+            <div class="form-group m-form__group row">
+                <label class="col-2 col-form-label m--margin-left-10">重复密码</label>
+                <div class="col-4">
+                    <input class="form-control m-input" minlength="8" id="new_password_repeat" type="password" name="new_password_repeat">
+                    <label>密码长度大于8位,最好是大写字母、小写字母、数字、特殊符号中的三项组合。</label>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <button class="btn btn-primary">确定</button>
+        {{ form_end(userForm) }}
+    </div>
+{% endblock %}
+
+{% block custom_javascripts %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#new_password_repeat").on("blur",function(e){
+                if ($(this).val() !== $("#new_password").val()){
+                    alert("两次密码输入的不同,请重新输入。");
+                    $("#new_password").val("");
+                    $(this).val("");
+                }
+            });
+        });
+    </script>
+{% endblock %}

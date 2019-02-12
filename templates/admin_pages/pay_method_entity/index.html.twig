@@ -1,0 +1,55 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}付款方式列表{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">付款方式列表</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>付款方式名称</th>
+            <th>付款方式描述</th>
+            <th>付款方式别名</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for pay_method_entity in pay_method_entities %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ pay_method_entity.payMethodName }}</td>
+                <td>{{ pay_method_entity.payMethodDesc }}</td>
+                <td>{{ pay_method_entity.payMethodAlias }}</td>
+                <td>
+                    {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                    or app.user.userPermissionGroupEntity.permissionJson.payMethodEntity.edit is defined %}
+                        <a href="{{ path('pay_method_entity_edit', {'id': pay_method_entity.id}) }}">编辑</a>
+                    {% endif %}
+                    {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                    or app.user.userPermissionGroupEntity.permissionJson.payMethodEntity.delete is defined %}
+                        <a href="{{ path('pay_method_entity_delete', {'id': pay_method_entity.id}) }}">删除</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">还没有添加付款方式</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if "ROLE_SUPER_ADMIN" in app.user.roles
+    or app.user.userPermissionGroupEntity.permissionJson.payMethodEntity.new is defined %}
+        <a href="{{ path('pay_method_entity_new') }}">添加付款方式</a>
+    {% endif %}
+{% endblock %}

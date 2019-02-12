@@ -1,0 +1,58 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}编辑{{ contentTypeEntity.contentTypeName }} 类型字段{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">编辑 {{ contentTypeEntity.contentTypeName }}  类型字段</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>字段名称</th>
+            <th>字段别名</th>
+            <th>字段描述</th>
+            <th>字段类型</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for field_type_entity in contentTypeEntity.fieldsTypeEntitys  %}
+            {% if field_type_entity.deleted != "1" %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ field_type_entity.fieldName }}</td>
+                    <td>{{ field_type_entity.fieldMachineAlias }}</td>
+                    <td>{{ field_type_entity.fieldDescription }}</td>
+                    <td>{{ field_type_entity.fieldTypeValue.fieldValueTypeName }}</td>
+                    <td>
+                        <a href="{{ path('field_type_entity_edit',
+                            {'contentTypeEntity_id': contentTypeEntity.id, 'field_id': field_type_entity.id }) }}">编辑</a>
+                        <a href="{{ path('field_type_entity_delete', {'contentTypeEntity_id':contentTypeEntity.id, 'field_id': field_type_entity.id }) }}">删除</a>
+                    </td>
+                </tr>
+
+            {% endif %}
+
+        {% else %}
+            <tr>
+                <td colspan="5">此内容类型下还没有任何字段</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('content_type_field_add',{'contentType': contentTypeEntity.contentTypeMachineAlias}) }}">添加新的字段</a>
+
+{% endblock %}
+

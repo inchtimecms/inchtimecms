@@ -1,0 +1,52 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}订单列表{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">订单列表</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th><input type="checkbox" class="form-checkbox" id="check_all_contents" title="选择此表中的所有行"></th>
+            <th>#</th>
+            <th>宝贝</th>
+            <th>单价</th>
+            <th>数量</th>
+            <th>买家</th>
+            <th>交易状态</th>
+            <th>实收款</th>
+            <th>评价</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for orderEntity in pagination %}
+
+            <td><input type="checkbox" class="form-checkbox" id="check_all_contents" title="选择此表中的所有行"></td>
+            <td>{{ loop.index }}</td>
+            <td>宝贝</td>
+            <td>单价</td>
+            <td>数量</td>
+            <td>买家</td>
+            <td>交易状态</td>
+            <td>实收款</td>
+            <td>评价</td>
+
+        {% else %}
+            <tr>
+                <td colspan="5">还没有发布任何内容。</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

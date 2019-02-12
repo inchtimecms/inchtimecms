@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html lang="{{ app.request.locale }}">
+
+<!-- begin::Head -->
+<head>
+    <meta charset="utf-8"/>
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
+
+    <!--begin::SEO Meta -->
+    {% block seo_meta %}
+        {#<meta name="description" content="" />#}
+        {#<meta name="keywords" content="" />#}
+    {% endblock %}
+    <!--end::SEO Meta -->
+
+    <!--begin::Base Styles -->
+    {% block base_stylesheets %}
+        {% include 'themes/cozastore/base_stylesheets.html.twig' %}
+    {% endblock %}
+    <!--end::Base Styles -->
+
+</head>
+
+<!-- begin::Body -->
+<body class="animsition">
+
+    {% block content %}
+
+    {% endblock %}
+
+    <!-- Back to top -->
+    <div class="btn-back-to-top" id="myBtn">
+		<span class="symbol-btn-back-to-top">
+			<i class="zmdi zmdi-chevron-up"></i>
+		</span>
+    </div>
+
+    <!--begin::Base Scripts -->
+    {% block base_javascripts %}
+        {% include 'themes/cozastore/base_javascripts.html.twig' %}
+    {% endblock %}
+    <!--end::Base Scripts -->
+</body>
+
+<!-- end::Body -->
+</html>

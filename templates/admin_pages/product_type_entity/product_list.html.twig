@@ -1,0 +1,98 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}商品列表{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">商品列表</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th><input type="checkbox" class="form-checkbox" id="check_all_contents" title="选择此表中的所有行"></th>
+                <th>标题</th>
+                <th>商品类型</th>
+                <th>作者</th>
+                <th>商品上下架状态</th>
+                <th>发布日期</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for content_entity in pagination %}
+            <tr>
+                <td><input type="checkbox" class="form-checkbox" name="content_id[]"></td>
+                <td>{{ content_entity.title }}</td>
+                <td>{{ content_entity.contentTypeEntity.contentTypeName }}</td>
+                <td>{{ content_entity.author.username }}</td>
+                <td>
+                    {% set fieldTables = content_entity.fieldTableEntitys %}
+                    {% for fieldTable in fieldTables %}
+                        {% if fieldTable.fieldAliasInContentTypeEntity == content_entity.contentTypeEntity.productTypeEntity.saleStatus %}
+                            {{ fieldTable.fieldTableValue == 1 ? "上架" : "下架" }}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{ content_entity.createAt ? content_entity.createAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                or app.user.userPermissionGroupEntity.permissionJson.contentEntity[content_entity.contentTypeEntity.contentTypeMachineAlias].edit is defined %}
+                    <a href="{{ path('content_entity_edit', {'contentEntity_id': content_entity.id}) }}">编辑</a>
+                {% endif %}
+                {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                or app.user.userPermissionGroupEntity.permissionJson.contentEntity[content_entity.contentTypeEntity.contentTypeMachineAlias].delete is defined %}
+                    <a data-toggle="modal" data-target="#deleteModal_{{ content_entity.id }}" href="">删除</a>
+                {% endif %}
+                </td>
+                <!-- 点删除按钮时弹出对话框提醒一下 -->
+                <div class="modal fade" id="deleteModal_{{ content_entity.id }}" tabindex="-1" role="dialog"
+                     aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel">删除当前内容？</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                您将要删除：{{ content_entity.title }} ，
+                                确定要这样做吗？
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                                <a href="{{ path('content_entity_delete', {'contentEntity_id': content_entity.id}) }}">
+                                    <button type="button" class="btn btn-primary" >确定</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">还没有发布任何内容。</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {# display navigation #}
+    <div class="col-12">
+        <div class="navigation">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    </div>
+    {% if "ROLE_SUPER_ADMIN" in app.user.roles
+    or app.user.userPermissionGroupEntity.permissionJson.productContentEntity.new is defined %}
+        <a href="{{ path('content_entity_new') }}">添加新的商品</a>
+    {% endif %}
+{% endblock %}

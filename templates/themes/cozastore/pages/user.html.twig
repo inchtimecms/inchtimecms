@@ -1,0 +1,68 @@
+{#用户账户模板#}
+
+{% extends 'themes/cozastore/base.html.twig' %}
+
+{% block title %}
+    我的账户
+{% endblock %}
+
+{% block seo_meta %}
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+{% endblock %}
+
+{% block content %}
+    {% include 'themes/cozastore/header.html.twig' %}
+
+    <!-- breadcrumb -->
+    <div class="container">
+        <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+            <a href="index.html" class="stext-109 cl8 hov-cl1 trans-04">
+                首页
+                <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+            </a>
+
+            <span class="stext-109 cl4">
+				用户中心
+			</span>
+        </div>
+    </div>
+
+    <div class="bg0 p-t-20 p-b-85">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-lg-4 col-xl-4 m-lr-auto m-b-50">
+                    <div class="p-lr-20 p-t-10 p-b-40 m-l-25 m-r--38 m-lr-0-xl">
+                        <ul class="user_nav list-group">
+                            <li class="list-group-item">
+                                <a class="active" href="{{ path('user') }}">我的订单</a>
+                            </li>
+                            <li class="list-group-item"><a href="{{ path('user_profile') }}">个人资料</a></li>
+                            <li class="list-group-item"><a href="{{ path('user_address') }}">收货地址</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-lg-8 col-xl-8 m-lr-auto m-b-50">
+                    <div class="p-lr-20 p-t-10 p-b-40 m-l-40 m-r-40 m-lr-0-xl p-lr-15-sm">
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    {% include 'themes/cozastore/footer.html.twig' %}
+{% endblock %}
+
+{% block base_javascripts %}
+    {{ parent() }}
+    {#当前页面得把页头MENU背景改为白色，用jquery修改吧#}
+    <script>
+        $(document).ready(function(){
+            $("header").addClass("header-v4");
+        });
+    </script>
+{% endblock %}

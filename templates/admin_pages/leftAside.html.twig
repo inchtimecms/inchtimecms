@@ -1,0 +1,459 @@
+<!-- BEGIN: Left Aside -->
+<button class="m-aside-left-close  m-aside-left-close--skin-dark " id="m_aside_left_close_btn">
+    <i class="la la-close"></i>
+</button>
+<div id="m_aside_left" class="m-grid__item	m-aside-left  m-aside-left--skin-dark ">
+    <!-- BEGIN: Aside Menu -->
+    <div id="m_ver_menu" class="m-aside-menu  m-aside-menu--skin-dark m-aside-menu--submenu-skin-dark " m-menu-vertical="1" m-menu-scrollable="1" m-menu-dropdown-timeout="500" style="position: relative;">
+        <ul class="m-menu__nav  m-menu__nav--dropdown-submenu-arrow ">
+            <li class="m-menu__item {% if "/dashboard" in app.request.uri %}m-menu__item--active{% endif %}" aria-haspopup="true">
+                <a href="{{ path('admin_dashboard') }}" class="m-menu__link ">
+                    <i class="m-menu__link-icon flaticon-line-graph"></i>
+                    <span class="m-menu__link-title">
+                        <span class="m-menu__link-wrap">
+                            <span class="m-menu__link-text">控制面板</span>
+                        </span>
+                    </span>
+                </a>
+            </li>
+
+            {% if "ROLE_SUPER_ADMIN" in app.user.roles
+            or app.user.userPermissionGroupEntity.permissionJson.contentEntity.new is defined
+            or app.user.userPermissionGroupEntity.permissionJson.contentEntity.view is defined
+            %}
+            <li class="m-menu__item  m-menu__item--submenu {% if "/content/entity" in app.request.uri %}m-menu__item--open{% endif %}" aria-haspopup="true" m-menu-submenu-toggle="hover">
+                <a href="javascript:;" class="m-menu__link m-menu__toggle">
+                    <i class="m-menu__link-icon flaticon-interface-3"></i>
+                    <span class="m-menu__link-text">内容管理</span>
+                    <i class="m-menu__ver-arrow la la-angle-right"></i>
+                </a>
+                <div class="m-menu__submenu ">
+                    <span class="m-menu__arrow"></span>
+                    <ul class="m-menu__subnav">
+                        <li class="m-menu__item m-menu__item--parent" aria-haspopup="true">
+							<span class="m-menu__link">
+								<span class="m-menu__link-text">内容管理</span>
+							</span>
+                        </li>
+                        {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                        or app.user.userPermissionGroupEntity.permissionJson.contentEntity.new is defined %}
+                        <li class="m-menu__item {% if "/content/entity/new" in app.request.uri %}m-menu__item--active{% endif %}" aria-haspopup="true">
+                            <a href="{{ path('content_entity_new') }}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">添加内容</span>
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                        or app.user.userPermissionGroupEntity.permissionJson.contentEntity.view is defined %}
+                        <li class="m-menu__item {% if "/content/entity/list" in app.request.uri %}m-menu__item--active{% endif %}" aria-haspopup="true">
+                            <a href="{{ path('content_entity_index') }}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">内容列表</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </li>
+            {% endif %}
+            {% if "ROLE_SUPER_ADMIN" in app.user.roles
+            or app.user.userPermissionGroupEntity.permissionJson.contentTypeEntity.new is defined
+            or app.user.userPermissionGroupEntity.permissionJson.contentTypeEntity.view is defined
+            %}
+            <li class="m-menu__item  m-menu__item--submenu {% if "/content/type/entity" in app.request.uri %}m-menu__item--open{% endif %}" aria-haspopup="true" m-menu-submenu-toggle="hover">
+                <a href="javascript:;" class="m-menu__link m-menu__toggle">
+                    <i class="m-menu__link-icon flaticon-interface-10"></i>
+                    <span class="m-menu__link-text">内容类型</span>
+                    <i class="m-menu__ver-arrow la la-angle-right"></i>
+                </a>
+                <div class="m-menu__submenu ">
+                    <span class="m-menu__arrow"></span>
+                    <ul class="m-menu__subnav">
+                        <li class="m-menu__item  m-menu__item--parent" aria-haspopup="true">
+                            <span class="m-menu__link">
+                                <span class="m-menu__link-text">内容类型</span>
+                            </span>
+                        </li>
+                        {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                        or app.user.userPermissionGroupEntity.permissionJson.contentTypeEntity.new is defined %}
+                        <li class="m-menu__item {% if "/content/type/entity/new" in app.request.uri %}m-menu__item--active{% endif %}" aria-haspopup="true">
+                            <a href="{{ path('content_type_entity_new') }}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">添加内容类型</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                        or app.user.userPermissionGroupEntity.permissionJson.contentTypeEntity.view is defined %}
+                        <li class="m-menu__item {% if "/content/type/entity/list" in app.request.uri %}m-menu__item--active{% endif %}" aria-haspopup="true">
+                            <a href="{{ path('content_type_entity_index') }}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">内容类型列表</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </li>
+            {% endif %}
+
+            {% if "ROLE_SUPER_ADMIN" in app.user.roles
+            or app.user.userPermissionGroupEntity.permissionJson.taxonomyTypeEntity.new is defined
+            or app.user.userPermissionGroupEntity.permissionJson.taxonomyTypeEntity.view is defined
+            %}
+            <li class="m-menu__item  m-menu__item--submenu {% if "/taxonomy/type/entity" in app.request.uri or "/taxonomy/entity" in app.request.uri %}m-menu__item--open{% endif %}" aria-haspopup="true" m-menu-submenu-toggle="hover">
+                <a href="javascript:;" class="m-menu__link m-menu__toggle">
+                    <i class="m-menu__link-icon flaticon-tabs"></i>
+                    <span class="m-menu__link-text">分类标签</span>
+                    <i class="m-menu__ver-arrow la la-angle-right"></i>
+                </a>
+                <div class="m-menu__submenu ">
+                    <span class="m-menu__arrow"></span>
+                    <ul class="m-menu__subnav">
+                        <li class="m-menu__item  m-menu__item--parent" aria-haspopup="true">
+                            <span class="m-menu__link">
+                                <span class="m-menu__link-text">分类标签</span>
+                            </span>
+                        </li>
+                        {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                        or app.user.userPermissionGroupEntity.permissionJson.taxonomyTypeEntity.new is defined %}
+                        <li class="m-menu__item {% if "/taxonomy/entity/add" in app.request.uri %}m-menu__item--active{% endif %}" aria-haspopup="true">
+                            <a href="{{ path("taxonomy_entity_add_choice") }}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">添加分类词汇</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                        or app.user.userPermissionGroupEntity.permissionJson.taxonomyTypeEntity.view is defined %}
+                        <li class="m-menu__item {% if "/taxonomy/type/entity/list" in app.request.uri %}m-menu__item--active{% endif %}" aria-haspopup="true">
+                            <a href="{{ path("taxonomy_type_entity_index") }}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">分类标签列表</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </li>
+            {% endif %}
+            {% if "ROLE_SUPER_ADMIN" in app.user.roles
+            or app.user.userPermissionGroupEntity.permissionJson.fileManageEntity.view is defined %}
+            <li class="m-menu__item {% if "/file/managed/entity" in app.request.uri %}m-menu__item--active{% endif %}" aria-haspopup="true">
+                <a href="{{ path('file_managed_entity_index') }}" class="m-menu__link ">
+                    <i class="m-menu__link-icon flaticon-file-2"></i>
+                    <span class="m-menu__link-title">
+                        <span class="m-menu__link-wrap">
+							<span class="m-menu__link-text">文件管理</span>
+						</span>
+					</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if "ROLE_SUPER_ADMIN" in app.user.roles
+            or app.user.userPermissionGroupEntity.permissionJson.productTypeEntity.view is defined
+            or app.user.userPermissionGroupEntity.permissionJson.productTypeEntity.new is defined
+            or app.user.userPermissionGroupEntity.permissionJson.productContentEntity.view is defined
+            or app.user.userPermissionGroupEntity.permissionJson.shipFeeTemplate.view is defined
+            or app.user.userPermissionGroupEntity.permissionJson.payMethodEntity.view is defined
+            %}
+            <li class="m-menu__item  m-menu__item--submenu
+            {% if "/product/type/entity" in app.request.uri
+                or "/ship/fee/template" in app.request.uri
+                or "/pay/method/entity" in app.request.uri %}m-menu__item--open{% endif %}"
+                aria-haspopup="true" m-menu-submenu-toggle="hover">
+                <a href="javascript:;" class="m-menu__link m-menu__toggle">
+                    <i class="m-menu__link-icon flaticon-shopping-basket"></i>
+                    <span class="m-menu__link-text">商品管理</span>
+                    <i class="m-menu__ver-arrow la la-angle-right"></i>
+                </a>
+                <div class="m-menu__submenu ">
+                    <span class="m-menu__arrow"></span>
+                    <ul class="m-menu__subnav">
+                        <li class="m-menu__item  m-menu__item--parent" aria-haspopup="true">
+                            <span class="m-menu__link">
+                                <span class="m-menu__link-text">商品管理</span>
+                            </span>
+                        </li>
+                        {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                        or app.user.userPermissionGroupEntity.permissionJson.productTypeEntity.new is defined %}
+                        <li class="m-menu__item {% if "/product/type/entity/new" in app.request.uri %}m-menu__item--active{% endif %}" aria-haspopup="true">
+                            <a href="{{ path("product_type_entity_new") }}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">添加商品类型</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                        or app.user.userPermissionGroupEntity.permissionJson.productTypeEntity.view is defined %}
+                        <li class="m-menu__item {% if "/product/type/entity/list" in app.request.uri %}m-menu__item--active{% endif %}" aria-haspopup="true">
+                            <a href="{{ path("product_type_entity_index") }}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">商品类型管理</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                        or app.user.userPermissionGroupEntity.permissionJson.productContentEntity.view is defined %}
+                        <li class="m-menu__item {% if "/product/content/list" in app.request.uri %}m-menu__item--active{% endif %}" aria-haspopup="true">
+                            <a href="{{ path('product_content_list') }}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">商品管理</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                        or app.user.userPermissionGroupEntity.permissionJson.shipFeeTemplate.view is defined %}
+                        <li class="m-menu__item {% if "/ship/fee/template" in app.request.uri %}m-menu__item--active{% endif %}" aria-haspopup="true">
+                            <a href="{{ path('ship_fee_template_entity_index') }}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">运费设置</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                        or app.user.userPermissionGroupEntity.permissionJson.payMethodEntity.view is defined %}
+                        <li class="m-menu__item {% if "/pay/method/entity" in app.request.uri %}m-menu__item--active{% endif %}" aria-haspopup="true">
+                            <a href="{{ path('pay_method_entity_index') }}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">付款设置</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </li>
+            {% endif %}
+            {% if "ROLE_SUPER_ADMIN" in app.user.roles
+            or app.user.userPermissionGroupEntity.permissionJson.orderEntity.view is defined %}
+            <li class="m-menu__item  m-menu__item--submenu {% if "/order/entity" in app.request.uri %}m-menu__item--open{% endif %}" aria-haspopup="true" m-menu-submenu-toggle="hover">
+                <a href="javascript:;" class="m-menu__link m-menu__toggle">
+                    <i class="m-menu__link-icon flaticon-cart"></i>
+                    <span class="m-menu__link-text">订单管理</span>
+                    <i class="m-menu__ver-arrow la la-angle-right"></i>
+                </a>
+                <div class="m-menu__submenu ">
+                    <span class="m-menu__arrow"></span>
+                    <ul class="m-menu__subnav">
+                        <li class="m-menu__item  m-menu__item--parent " aria-haspopup="true">
+                            <span class="m-menu__link">
+                                <span class="m-menu__link-text">订单管理</span>
+                            </span>
+                        </li>
+                        {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                        or app.user.userPermissionGroupEntity.permissionJson.orderEntity.view is defined %}
+                        <li class="m-menu__item {% if "/order/entity" in app.request.uri %}m-menu__item--active{% endif %}" aria-haspopup="true">
+                            <a href="{{ path('admin_order_entity_list') }}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">订单列表</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </li>
+            {% endif %}
+            {% if "ROLE_SUPER_ADMIN" in app.user.roles
+            or app.user.userPermissionGroupEntity.permissionJson.menuEntity.view is defined %}
+            <li class="m-menu__item  m-menu__item--submenu {% if "/menu" in app.request.uri %}m-menu__item--open{% endif %}" aria-haspopup="true" m-menu-submenu-toggle="hover">
+                <a href="javascript:;" class="m-menu__link m-menu__toggle">
+                    <i class="m-menu__link-icon flaticon-grid-menu"></i>
+                    <span class="m-menu__link-text">菜单管理</span>
+                    <i class="m-menu__ver-arrow la la-angle-right"></i>
+                </a>
+                <div class="m-menu__submenu ">
+                    <span class="m-menu__arrow"></span>
+                    <ul class="m-menu__subnav">
+                        <li class="m-menu__item  m-menu__item--parent" aria-haspopup="true">
+                            <span class="m-menu__link">
+                                <span class="m-menu__link-text">菜单管理</span>
+                            </span>
+                        </li>
+                        {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                        or app.user.userPermissionGroupEntity.permissionJson.menuEntity.view is defined %}
+                        <li class="m-menu__item {% if "/menu" in app.request.uri %}m-menu__item--active{% endif %}" aria-haspopup="true">
+                            <a href="{{ path("menu") }}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">菜单管理</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </li>
+            {% endif %}
+            {% if "ROLE_SUPER_ADMIN" in app.user.roles
+            or app.user.userPermissionGroupEntity.permissionJson.commentTypeEntity.view is defined
+            or app.user.userPermissionGroupEntity.permissionJson.commentEntity.view is defined
+            %}
+            <li class="m-menu__item  m-menu__item--submenu {% if "/comment" in app.request.uri %}m-menu__item--open{% endif %}" aria-haspopup="true" m-menu-submenu-toggle="hover">
+                <a href="javascript:;" class="m-menu__link m-menu__toggle">
+                    <i class="m-menu__link-icon flaticon-comment"></i>
+                    <span class="m-menu__link-text">评论管理</span>
+                    <i class="m-menu__ver-arrow la la-angle-right"></i>
+                </a>
+                <div class="m-menu__submenu ">
+                    <span class="m-menu__arrow"></span>
+                    <ul class="m-menu__subnav">
+                        {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                        or app.user.userPermissionGroupEntity.permissionJson.commentTypeEntity.view is defined %}
+                        <li class="m-menu__item {% if "/comment/type/entity/list" in app.request.uri %}m-menu__item--active{% endif %}" aria-haspopup="true">
+                            <a href="{{ path('comment_type_entity') }}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">评论类型</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                        or app.user.userPermissionGroupEntity.permissionJson.commentEntity.view is defined %}
+                        <li class="m-menu__item {% if "/comment/entity/list" in app.request.uri %}m-menu__item--active{% endif %}" aria-haspopup="true">
+                            <a href="{{ path('comment_entity') }}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">评论列表</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </li>
+            {% endif %}
+            {% if "ROLE_SUPER_ADMIN" in app.user.roles
+            or app.user.userPermissionGroupEntity.permissionJson.contactFormTypeEntity.view is defined
+            or app.user.userPermissionGroupEntity.permissionJson.contactFormEntity.view is defined
+            %}
+            <li class="m-menu__item  m-menu__item--submenu {% if "/contact" in app.request.uri %}m-menu__item--open{% endif %}" aria-haspopup="true" m-menu-submenu-toggle="hover">
+                <a href="javascript:;" class="m-menu__link m-menu__toggle">
+                    <i class="m-menu__link-icon flaticon-interface-2"></i>
+                    <span class="m-menu__link-text">联系表单</span>
+                    <i class="m-menu__ver-arrow la la-angle-right"></i>
+                </a>
+                <div class="m-menu__submenu ">
+                    <span class="m-menu__arrow"></span>
+                    <ul class="m-menu__subnav">
+                        <li class="m-menu__item  m-menu__item--parent" aria-haspopup="true">
+                            <span class="m-menu__link">
+                                <span class="m-menu__link-text">联系表单</span>
+                            </span>
+                        </li>
+                        {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                        or app.user.userPermissionGroupEntity.permissionJson.contactFormTypeEntity.view is defined %}
+                        <li class="m-menu__item {% if "/contact/form/type/list" in app.request.uri %}m-menu__item--active{% endif %}" aria-haspopup="true">
+                            <a href="{{ path('contact_form_type_list') }}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">表单类型</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                        or app.user.userPermissionGroupEntity.permissionJson.contactFormEntity.view is defined %}
+                        <li class="m-menu__item {% if "/contact/form/entity/list" in app.request.uri %}m-menu__item--active{% endif %}" aria-haspopup="true">
+                            <a href="{{ path('contact_form_entity_list') }}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">表单列表</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </li>
+            {% endif %}
+            {% if "ROLE_SUPER_ADMIN" in app.user.roles
+            or app.user.userPermissionGroupEntity.permissionJson.userEntity.view is defined
+            or app.user.userPermissionGroupEntity.permissionJson.userGroupEntity.view is defined
+            %}
+            <li class="m-menu__item  m-menu__item--submenu {% if "/user" in app.request.uri %}m-menu__item--open{% endif %}" aria-haspopup="true" m-menu-submenu-toggle="hover">
+                <a href="javascript:;" class="m-menu__link m-menu__toggle">
+                    <i class="m-menu__link-icon flaticon-user"></i>
+                    <span class="m-menu__link-text">用户管理</span>
+                    <i class="m-menu__ver-arrow la la-angle-right"></i>
+                </a>
+                <div class="m-menu__submenu ">
+                    <span class="m-menu__arrow"></span>
+                    <ul class="m-menu__subnav">
+                        <li class="m-menu__item  m-menu__item--parent" aria-haspopup="true">
+                            <span class="m-menu__link">
+                                <span class="m-menu__link-text">用户管理</span>
+                            </span>
+                        </li>
+                        {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                        or app.user.userPermissionGroupEntity.permissionJson.userEntity.view is defined %}
+                        <li class="m-menu__item {% if "/user/entity" in app.request.uri %}m-menu__item--active{% endif %}" aria-haspopup="true">
+                            <a href="{{ path('user_entity_list') }}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">用户列表</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                        or app.user.userPermissionGroupEntity.permissionJson.userGroupEntity.view is defined %}
+                        <li class="m-menu__item {% if "/user/permission/group/entity" in app.request.uri %}m-menu__item--active{% endif %}" aria-haspopup="true">
+                            <a href="{{ path('user_permission_group_entity') }}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">用户权限</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </li>
+            {% endif %}
+            {% if "ROLE_SUPER_ADMIN" in app.user.roles
+            or app.user.userPermissionGroupEntity.permissionJson.systemEntity.view is defined %}
+            <li class="m-menu__item {% if "/system/entity" in app.request.uri %}m-menu__item--active{% endif %}" aria-haspopup="true">
+                <a href="{{ path('system_entity') }}" class="m-menu__link ">
+                    <i class="m-menu__link-icon flaticon-interface-8"></i>
+                    <span class="m-menu__link-title">
+                        <span class="m-menu__link-wrap">
+                            <span class="m-menu__link-text">系统设置</span>
+                        </span>
+                    </span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <!-- END: Aside Menu -->
+</div>
+
+<!-- END: Left Aside -->

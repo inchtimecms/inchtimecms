@@ -1,0 +1,27 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}编辑评论类型{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">编辑评论类型</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="col-12">
+        <div class="m-portlet m-portlet--tab">
+            {{ form_start(form,{"attr": {"class":"m-form m-form--fit m-form--label-align-right"}}) }}
+            {{ form_widget(form,{"attr":{"class":"m-form__group"}}) }}
+            <div class="m-form__actions">
+                <button class="btn btn-primary ">确定</button>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

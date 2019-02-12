@@ -1,0 +1,63 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}添加商品{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">添加商品</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    {#{{ dump(contentTypeEntitys) }}#}
+    <div class="col-xl-12">
+
+        <!--begin::Portlet-->
+        <div class="m-portlet">
+            <div class="m-portlet__head">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+                        <h3 class="m-portlet__head-text">
+                            选择商品类型
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="m-portlet__body">
+                <!--begin::Section-->
+                <div class="m-section">
+                    <div class="m-section__content">
+                        <table class="table">
+                            <tbody>
+
+                            {% for productTypeEntity in productTypeEntitys %}
+                                {% if productTypeEntity.deleted != "1" %}
+                                <tr>
+                                    <td>
+                                        <h5><a href="{{ path("content_entity_new_page",{'contentTypeEntity_id': productTypeEntity.contentTypeEntity.id }) }}" >
+                                                {{ productTypeEntity.productTypeName }}</a></h5>
+                                        <p>{{ productTypeEntity.productDesc }}</p>
+                                    </td>
+                                </tr>
+                                {% endif %}
+
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!--end::Section-->
+            </div>
+            <!--end::Form-->
+        </div>
+
+        <!--end::Portlet-->
+
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}编辑分类词汇{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">编辑分类词汇</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <div class="col-md-12">
+        <!--begin::Portlet-->
+        <div class="m-portlet m-portlet--tab">
+            <!--begin::Form-->
+            <form class="m-form m-form--fit m-form--label-align-right"
+                  action={{ path("taxonomy_entity_edit_action", {"taxonomyEntity_Id":taxonomyEntity.id}) }} method="POST">
+                <div class="m-portlet__body">
+                    <div class="form-group m-form__group">
+                        <label for="newTaxonomyWord">分类词汇(必填)：</label>
+                        <input type="text" class="form-control m-input" required="required" value="{{ taxonomyEntity.taxonomyWord }}"
+                               id="newTaxonomyWord" name="newTaxonomyWord">
+                        <span class="m-form__help">输入分类词汇的名称。</span>
+                    </div>
+
+                    <div class="form-group m-form__group">
+                        <label for="newTaxonomyDesc">分类词汇描述：</label>
+                        <input type="text" class="form-control m-input" value="{{ taxonomyEntity.taxonomyDesc }}"
+                               id="newTaxonomyDesc" name="newTaxonomyDesc">
+                        <span class="m-form__help">输入分类词汇的描述，简短说明下此标签下的词汇的描述。</span>
+                    </div>
+
+                </div>
+                <div class="m-portlet__foot m-portlet__foot--fit">
+                    <div class="m-form__actions">
+                        <button id="addNewTaxonomyEntityButton" class="btn btn-primary">确定</button>
+                    </div>
+                </div>
+            </form>
+            <!--end::Form-->
+        </div>
+        <!--end::Portlet-->
+    </div>
+
+    <a href="{{ path('taxonomy_entity_index', {"taxonomyTypeEntity_Id":taxonomyEntity.taxonomyTypeEntity.id }) }}">返回词汇列表</a>
+
+{% endblock %}

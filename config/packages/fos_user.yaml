@@ -1,0 +1,12 @@
+fos_user:
+    db_driver: orm
+    user_class: App\Entity\UserEntity
+    firewall_name: main
+    registration:
+            confirmation:
+                enabled: false
+    ##注册验证及密码找回请手动修改此处，请和MAIL_URL中的邮件地址一致，防止发送失败。
+    from_email:
+        address: "qwwdezone@163.com"
+        sender_name: "InchTimeCMS"
+

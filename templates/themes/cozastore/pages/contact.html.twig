@@ -1,0 +1,110 @@
+{#联系表单页面模板#}
+
+{% extends 'themes/cozastore/base.html.twig' %}
+
+{% block title %}
+    {{ contactFormTypeEntity.formTypeName }}
+{% endblock %}
+
+{% block seo_meta %}
+    <meta name="description" content="{{ contactFormTypeEntity.formTypeName }},{{ system.siteDescription }}"/>
+    <meta name="keywords" content="{{ system.siteSubTitle }}"/>
+{% endblock %}
+
+{% block content %}
+
+    {% include 'themes/cozastore/header.html.twig' %}
+
+    <!-- Title page -->
+    <section class="bg-img1 txt-center p-lr-15 p-tb-92" style="background-image: url({{ asset('assets/cozastore/images/bg-01.jpg') }});">
+        <h2 class="ltext-105 cl0 txt-center">
+            {{ contactFormTypeEntity.formTypeName }}
+        </h2>
+    </section>
+
+    <!-- Content page -->
+    <section class="bg0 p-t-104 p-b-116">
+        <div class="container">
+            <div class="flex-w flex-tr">
+                <div class="size-210 bor10 p-lr-70 p-t-55 p-b-70 p-lr-15-lg w-full-md">
+                    <h4 class="mtext-105 cl2 txt-center p-b-30">
+                        给我们发送信息吧
+                    </h4>
+                    {{ form_start(contactForm, {'attr': {'class': ''}}) }}
+                    {{ form_widget(contactForm) }}
+                    <button class="flex-c-m stext-101 cl0 size-121 bg3 bor1 hov-btn3 p-lr-15 trans-04 pointer">确定</button>
+                    {{ form_end(contactForm) }}
+                </div>
+
+                <div class="size-210 bor10 flex-w flex-col-m p-lr-93 p-tb-30 p-lr-15-lg w-full-md">
+                    <div class="flex-w w-full p-b-42">
+						<span class="fs-18 cl5 txt-center size-211">
+							<span class="lnr lnr-map-marker"></span>
+						</span>
+
+                        <div class="size-212 p-t-2">
+							<span class="mtext-110 cl2">
+								公司地址:
+							</span>
+
+                            <p class="stext-115 cl6 size-213 p-t-18">
+                                河南省洛阳市吉利区河阳路吉利中路56号，
+                                洛阳随手联科技有限公司
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex-w w-full p-b-42">
+						<span class="fs-18 cl5 txt-center size-211">
+							<span class="lnr lnr-phone-handset"></span>
+						</span>
+
+                        <div class="size-212 p-t-2">
+							<span class="mtext-110 cl2">
+								联系电话:
+							</span>
+
+                            <p class="stext-115 cl1 size-213 p-t-18">
+                                +86 13938812345
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex-w w-full">
+						<span class="fs-18 cl5 txt-center size-211">
+							<span class="lnr lnr-envelope"></span>
+						</span>
+
+                        <div class="size-212 p-t-2">
+							<span class="mtext-110 cl2">
+								联系邮箱
+							</span>
+
+                            <p class="stext-115 cl1 size-213 p-t-18">
+                                contact@example.com
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    {% include 'themes/cozastore/footer.html.twig' %}
+
+{% endblock %}
+
+{% block base_javascripts %}
+    {{ parent() }}
+    {#当前页面得把页头MENU背景改为白色，用jquery修改吧#}
+    <script>
+        $(document).ready(function(){
+            $("header").addClass("header-v4");
+
+            $('.js-show-cart').on('click',function(e){
+                window.location.href= $(e.target).data("cart");
+            });
+        });
+    </script>
+{% endblock %}

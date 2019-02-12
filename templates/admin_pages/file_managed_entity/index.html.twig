@@ -1,0 +1,257 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}文件管理{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">文件管理</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+        {% for fileManagedEntity in pagination %}
+
+            {% if fileManagedEntity.filemime|slice(0,5) == "image" %}
+                {% if fileManagedEntity.fieldImageTableEntity != null %}
+                    <!--begin::Portlet-->
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-4">
+                        <div class="file-wrapper">
+                            <div class="type-image">
+                                <a href="" data-toggle="modal" data-target="#m_modal_{{ fileManagedEntity.id }}">
+                                    <img src="{{ asset(''~ fileManagedEntity.uri ~'') | imagine_filter('fileManager_thumbnail') }} "
+                                         width=100% alt="{{ fileManagedEntity.fieldImageTableEntity.imageAlt }}"
+                                         title="{{ fileManagedEntity.fieldImageTableEntity.imageTitle }}"/>
+                                </a>
+                            </div>
+                            <!--begin::Modal-->
+                            <div class="modal fade" id="m_modal_{{ fileManagedEntity.id }}" tabindex="-1" role="dialog"
+                                 aria-labelledby="ModalLabel_{{ fileManagedEntity.id }}" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="ModalLabel_{{ fileManagedEntity.id }}">文件信息</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="modal-file-wrapper col-7">
+                                                    {% if fileManagedEntity.filemime|slice(0,5) == "image" %}
+                                                        {% if fileManagedEntity.fieldImageTableEntity != null %}
+                                                            <img src="{{ asset(''~ fileManagedEntity.uri ~'') }}"
+                                                                 width=100% alt="{{ fileManagedEntity.fieldImageTableEntity.imageAlt }}"
+                                                                 title="{{ fileManagedEntity.fieldImageTableEntity.imageTitle }}"/>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <i class="flaticon-file"></i>
+                                                        <div class="file-name">{{ fileManagedEntity.fileName }}</div>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="modal-fileinfo-wrapper col-5">
+                                                    <div class="file-info-top">
+                                                        <div class="file-name">
+                                                            <label>文件名：{{ fileManagedEntity.fileName }}</label>
+                                                        </div>
+                                                        <div class="file-type">
+                                                            <label>文件类型：{{ fileManagedEntity.filemime }}</label>
+                                                        </div>
+                                                        <div class="file-name">
+                                                            <label>上传于：{{ fileManagedEntity.createdAt ? fileManagedEntity.createdAt|date('Y-m-d H:i:s') : '' }}</label>
+                                                        </div>
+                                                        <div class="file-size">
+                                                            <label>文件大小：{{ fileManagedEntity.fileSize }}</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="file-info-bottom">
+                                                        <div class="file-url">
+                                                            <label>url：</label>
+                                                            <input type="text" value="{{ baseUrl }}{{ fileManagedEntity.uri }}"
+                                                                   class="form-control m-input" disabled="disabled">
+                                                        </div>
+                                                        {% if fileManagedEntity.filemime|slice(0,5) == "image" %}
+                                                            {% if fileManagedEntity.fieldImageTableEntity != null %}
+                                                                <div class="file-title">
+                                                                    <label>文件标题：</label>
+                                                                    <input type="text"
+                                                                           value="{{ fileManagedEntity.fieldImageTableEntity.imageTitle }}"
+                                                                           class="form-control m-input">
+                                                                </div>
+
+                                                                <div class="file-alt">
+                                                                    <label>alt文本：</label>
+                                                                    <input type="text"
+                                                                           value="{{ fileManagedEntity.fieldImageTableEntity.imageAlt }}"
+                                                                           class="form-control m-input">
+                                                                </div>
+                                                            {% endif %}
+                                                        {% else %}
+                                                            <div class="file-title">
+                                                                <label>文件标题：</label>
+                                                                <input type="text" value="{{ fileManagedEntity.fileName }}"
+                                                                       class="form-control m-input">
+                                                            </div>
+                                                        {% endif %}
+                                                        {#<div class="file-admin">#}
+                                                        {#<label>上传者：</label>#}
+                                                        {##}
+                                                        {#</div>#}
+                                                        <div class="file-ref">
+                                                            <label>引用至：</label>
+                                                            {% if fileManagedEntity.filemime|slice(0,5) == "image" %}
+                                                                {% if fileManagedEntity.fieldImageTableEntity != null %}
+                                                                    <a href="{{ path('content_entity_edit',{contentEntity_id:fileManagedEntity.fieldImageTableEntity.contentEntity.id}) }}"
+                                                                       target="_blank">{{ fileManagedEntity.fieldImageTableEntity.contentEntity.title }}</a>
+                                                                {% endif %}
+                                                            {% else %}
+                                                                <a href="{{ path('content_entity_edit',{contentEntity_id:fileManagedEntity.fieldFileTableEntity.contentEntity.id}) }}"
+                                                                   target="_blank">{{ fileManagedEntity.fieldFileTableEntity.contentEntity.title }}</a>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end::Modal-->
+                        </div>
+                    </div>
+
+                {% endif %}
+            {% else %}
+                <!--begin::Portlet-->
+                <div class="col-lg-2 col-md-2 col-sm-3 col-4">
+                    <div class="file-wrapper">
+                        <div class="type-file">
+                            <a href="" data-toggle="modal" data-target="#m_modal_{{ fileManagedEntity.id }}">
+                                <i class="flaticon-file"></i>
+                                <div class="file-name">{{ fileManagedEntity.fileName }}</div>
+                            </a>
+                        </div>
+                        <!--begin::Modal-->
+                        <div class="modal fade" id="m_modal_{{ fileManagedEntity.id }}" tabindex="-1" role="dialog"
+                             aria-labelledby="ModalLabel_{{ fileManagedEntity.id }}" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="ModalLabel_{{ fileManagedEntity.id }}">文件信息</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="modal-file-wrapper col-7">
+                                                {% if fileManagedEntity.filemime|slice(0,5) == "image" %}
+                                                    {% if fileManagedEntity.fieldImageTableEntity != null %}
+                                                        <img src="{{ baseUrl }}{{ fileManagedEntity.uri }}"
+                                                             width=100% alt="{{ fileManagedEntity.fieldImageTableEntity.imageAlt }}"
+                                                             title="{{ fileManagedEntity.fieldImageTableEntity.imageTitle }}"/>
+                                                    {% endif %}
+                                                {% else %}
+                                                    <i class="flaticon-file"></i>
+                                                    <div class="file-name">{{ fileManagedEntity.fileName }}</div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="modal-fileinfo-wrapper col-5">
+                                                <div class="file-info-top">
+                                                    <div class="file-name">
+                                                        <label>文件名：{{ fileManagedEntity.fileName }}</label>
+                                                    </div>
+                                                    <div class="file-type">
+                                                        <label>文件类型：{{ fileManagedEntity.filemime }}</label>
+                                                    </div>
+                                                    <div class="file-name">
+                                                        <label>上传于：{{ fileManagedEntity.createdAt ? fileManagedEntity.createdAt|date('Y-m-d H:i:s') : '' }}</label>
+                                                    </div>
+                                                    <div class="file-size">
+                                                        <label>文件大小：{{ fileManagedEntity.fileSize }}</label>
+                                                    </div>
+                                                </div>
+                                                <div class="file-info-bottom">
+                                                    <div class="file-url">
+                                                        <label>url：</label>
+                                                        <input type="text" value="{{ baseUrl }}{{ fileManagedEntity.uri }}"
+                                                               class="form-control m-input" disabled="disabled">
+                                                    </div>
+                                                    {% if fileManagedEntity.filemime|slice(0,5) == "image" %}
+                                                        {% if fileManagedEntity.fieldImageTableEntity != null %}
+                                                            <div class="file-title">
+                                                                <label>文件标题：</label>
+                                                                <input type="text"
+                                                                       value="{{ fileManagedEntity.fieldImageTableEntity.imageTitle }}"
+                                                                       class="form-control m-input">
+                                                            </div>
+
+                                                            <div class="file-alt">
+                                                                <label>alt文本：</label>
+                                                                <input type="text"
+                                                                       value="{{ fileManagedEntity.fieldImageTableEntity.imageAlt }}"
+                                                                       class="form-control m-input">
+                                                            </div>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <div class="file-title">
+                                                            <label>文件标题：</label>
+                                                            <input type="text" value="{{ fileManagedEntity.fileName }}"
+                                                                   class="form-control m-input">
+                                                        </div>
+                                                    {% endif %}
+                                                    {#<div class="file-admin">#}
+                                                    {#<label>上传者：</label>#}
+                                                    {##}
+                                                    {#</div>#}
+                                                    <div class="file-ref">
+                                                        <label>引用至：</label>
+                                                        {% if fileManagedEntity.filemime|slice(0,5) == "image" %}
+                                                            {% if fileManagedEntity.fieldImageTableEntity != null %}
+                                                                <a href="{{ path('content_entity_edit',{contentEntity_id:fileManagedEntity.fieldImageTableEntity.contentEntity.id}) }}"
+                                                                   target="_blank">{{ fileManagedEntity.fieldImageTableEntity.contentEntity.title }}</a>
+                                                            {% endif %}
+                                                        {% else %}
+                                                            <a href="{{ path('content_entity_edit',{contentEntity_id:fileManagedEntity.fieldFileTableEntity.contentEntity.id}) }}"
+                                                               target="_blank">{{ fileManagedEntity.fieldFileTableEntity.contentEntity.title }}</a>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--end::Modal-->
+                    </div>
+                </div>
+
+            {% endif %}
+
+        {% endfor %}
+
+
+    <div class="col-12">
+        <div class="navigation">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block custom_javascripts %}
+
+{% endblock %}

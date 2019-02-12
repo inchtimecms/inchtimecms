@@ -1,0 +1,44 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}错误{% endblock %}
+
+{% block subHeader %}
+<div class="m-subheader ">
+	<div class="d-flex align-items-center">
+		<div class="mr-auto">
+			<h3 class="m-subheader__title ">错误</h3>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+	<!-- begin:: Page -->
+	<div class="m-grid m-grid--hor m-grid--root m-page">
+		<div class="m-grid__item m-grid__item--fluid m-grid  m-error-3" style="background-image: url(../assets/app/media/img//error/bg3.jpg);">
+			<div class="m-error_container">
+						<span class="m-error_number">
+							<h1>404</h1>
+						</span>
+				<p class="m-error_title m--font-light">
+					对不起！您想要看的页面跑丢了。
+				</p>
+				<p class="m-error_subtitle">
+					对不起，您的页面跑丢了，攻城狮已经在去找了！
+				</p>
+				<p class="m-error_description">
+					或许您输入的网址可能存在问题，<br>
+					或者您要查找的页面可能已经不再存在。
+				</p>
+			</div>
+		</div>
+	</div>
+	<!-- end:: Page -->
+
+{% endblock %}
+
+
+
+

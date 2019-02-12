@@ -1,0 +1,104 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}商品类型列表{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">商品类型列表</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>商品类型名称</th>
+            <th>类型描述</th>
+            <th>类型别名</th>
+            <th>引用的内容类型</th>
+            <th>原价字段</th>
+            <th>现价字段</th>
+            <th>运费模板</th>
+            <th>是否实物</th>
+            <th>是否需要发货</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for product_type_entity in pagination %}
+            {% if product_type_entity.deleted != true %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ product_type_entity.productTypeName }}</td>
+                    <td>{{ product_type_entity.productDesc }}</td>
+                    <td>{{ product_type_entity.productAlias}}</td>
+                    <td>{{ product_type_entity.contentTypeEntity.contentTypeName}}</td>
+                    <td>{{ product_type_entity.priceField}}</td>
+                    <td>{{ product_type_entity.discountPriceField}}</td>
+                    <td>{{ product_type_entity.shipFeeTemplateEntity.templateName}}</td>
+                    <td>{{  product_type_entity.boolRealOrVirtual == "1" ? "是":"否"}}</td>
+                    <td>{{ product_type_entity.boolNeedShip == "1"?"是":"否"}}</td>
+                    <td>
+                        {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                        or app.user.userPermissionGroupEntity.permissionJson.productTypeEntity[product_type_entity.productAlias].edit is defined %}
+                            <a href="{{ path('product_type_entity_edit', {'id': product_type_entity.id}) }}">编辑</a>
+                        {% endif %}
+                        {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                        or app.user.userPermissionGroupEntity.permissionJson.productTypeEntity[product_type_entity.productAlias].delete is defined %}
+                            <a id="productTypeEntityDelete" data-toggle="modal" data-target="#deleteModal_{{ product_type_entity.id }}"
+                               href="">删除</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                <!-- 点删除按钮时弹出对话框提醒一下 -->
+                <div class="modal fade" id="deleteModal_{{ product_type_entity.id }}" tabindex="-1" role="dialog"
+                     aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel">删除商品类型？</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                您将要删除：{{ product_type_entity.productTypeName }}  商品类型，
+                                {{ product_type_entity.productTypeName }} 类型下的所有商品也将被删除，
+                                确定要这样做吗？
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                                <a href="{{ path('product_type_entity_delete', {'id': product_type_entity.id}) }}">
+                                    <button type="button" class="btn btn-primary" >确定</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+        {% else %}
+            <tr>
+                <td colspan="5">还没有创建任何商品类型</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="col-12">
+        <div class="navigation">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    </div>
+    {% if "ROLE_SUPER_ADMIN" in app.user.roles
+    or app.user.userPermissionGroupEntity.permissionJson.productTypeEntity.new is defined %}
+        <a href="{{ path('product_type_entity_new') }}">创建商品类型</a>
+    {% endif %}
+{% endblock %}
+

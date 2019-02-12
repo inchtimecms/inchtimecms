@@ -1,0 +1,119 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %}用户列表{% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">用户列表</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <table class="table col-12">
+        <thead>
+        <tr>
+            <th><input type="checkbox" class="form-checkbox" id="check_all_contents" title="选择此表中的所有行"></th>
+            <th>#</th>
+            <th>用户名</th>
+            <th class="d-none d-md-block">邮箱</th>
+            <th>用户组</th>
+            <th>账号状态</th>
+            <th class="d-none d-md-block">上次登录</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for userEntity in pagination %}
+            {% if userEntity != app.user %}
+            <tr>
+                <td><input type="checkbox" class="form-checkbox" name=""></td>
+                <td>{{ loop.index }}</td>
+                <td>{{ userEntity.username }}</td>
+                <td class="d-none d-md-block">{{ userEntity.email }}</td>
+                <td>{{ userEntity.userPermissionGroupEntity.groupName }}</td>
+                <td>{% if userEntity.enabled %} 正常 {% else %} 锁定 {% endif %}</td>
+                <td class="d-none d-md-block">{{ userEntity.lastLogin|date('Y-m-d H:i:s') }}</td>
+                <td>
+                {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                or app.user.userPermissionGroupEntity.permissionJson.userEntity.edit is defined %}
+                    <a href="{{ path('user_entity_edit', {id:userEntity.id}) }}">编辑</a>
+                    <a data-toggle="modal" data-target="#disEnableModal_{{ userEntity.id }}"
+                       href="">锁定</a>
+                {% endif %}
+                {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                or app.user.userPermissionGroupEntity.permissionJson.userEntity.delete is defined %}
+                    <a data-toggle="modal" data-target="#deleteModal_{{ userEntity.id }}"
+                       href="">删除</a>
+                {% endif %}
+                </td>
+            </tr>
+            {% endif %}
+            <!-- 点锁定按钮时弹出对话框提醒一下 -->
+            <div class="modal fade" id="disEnableModal_{{ userEntity.id }}" tabindex="-1" role="dialog"
+                 aria-labelledby="disEnableModal" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">锁定当前用户 {{ userEntity.username }}？</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            您将要锁定：{{ userEntity.username }} .
+                            确定要这样做吗？
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                            <a href="{{ path('user_entity_disable',{"id":userEntity.id }) }}">
+                                <button type="button" class="btn btn-primary" >确定</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 点删除按钮时弹出对话框提醒一下 -->
+            <div class="modal fade" id="deleteModal_{{ userEntity.id }}" tabindex="-1" role="dialog"
+                 aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">删除当前用户 {{ userEntity.username }}？</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            您将要删除：{{ userEntity.username }} .
+                            确定要这样做吗？
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                            <a href="{{ path('user_entity_delete',{"id":userEntity.id }) }}">
+                                <button type="button" class="btn btn-primary" >确定</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <tr>
+                <td colspan="5">除了您和超级管理员外，还没有其他用户。</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {# display navigation #}
+    <div class="col-12">
+        <div class="navigation">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    </div>
+
+{% endblock %}

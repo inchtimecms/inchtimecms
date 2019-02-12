@@ -1,0 +1,366 @@
+{#非商品内容类型单内容详情模板#}
+
+{% extends 'themes/cozastore/base.html.twig' %}
+
+{% block title %}
+    {{ contentEntity.title }}
+{% endblock %}
+
+{% block seo_meta %}
+    <meta name="description" content="{{ contentEntity.body|striptags|slice(0,60)}}"/>
+    <meta name="keywords" content="{{ contentEntity.title }}"/>
+{% endblock %}
+
+{% block content %}
+    {% include 'themes/cozastore/header.html.twig' %}
+
+    <!-- breadcrumb -->
+    <div class="container">
+        <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+            <a href="/" class="stext-109 cl8 hov-cl1 trans-04">
+                首页
+                <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+            </a>
+
+            <a href="{{ path('show_content_type_contents_list', {contentTypeMachineAlias :contentEntity.contentTypeEntity.contentTypeMachineAlias} ) }}" class="stext-109 cl8 hov-cl1 trans-04">
+                {{ contentEntity.contentTypeEntity.contentTypeName }}
+                <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+            </a>
+
+            <span class="stext-109 cl4">
+				{{ contentEntity.title }}
+			</span>
+        </div>
+    </div>
+
+    <!-- Content page -->
+    <section class="bg0 p-t-52 p-b-20">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-lg-9 p-b-80">
+                    <div class="p-r-45 p-r-0-lg">
+                        <!--  -->
+                        <div class="wrap-pic-w how-pos5-parent">
+                            <img src="{{ asset(contentEntity.fieldImageTableEntitys[0].fileManagedEntity.uri) }}" alt="{{ contentEntity.title }}">
+
+                            <div class="flex-col-c-m size-123 bg9 how-pos5">
+								<span class="ltext-107 cl2 txt-center">
+									{{ contentEntity.createAt|date('d') }}
+								</span>
+                                <span class="stext-109 cl3 txt-center">
+									{{ contentEntity.createAt|date('m, Y') }}
+								</span>
+                            </div>
+                        </div>
+
+                        <div class="p-t-32">
+							<span class="flex-w flex-m stext-111 cl2 p-b-19">
+								<span>
+									<span class="cl4">作者:</span> {{ contentEntity.author.username }}
+									<span class="cl12 m-l-4 m-r-6">|</span>
+								</span>
+
+								<span>
+									更新于: {{ contentEntity.changeAt|date('Y-m-d') }}
+									<span class="cl12 m-l-4 m-r-6">|</span>
+								</span>
+
+								<span>
+									{% for fieldTaxonomyTableEntity in contentEntity.fieldTaxonomyTableEntitys %}
+                                        {{ fieldTaxonomyTableEntity.taxonomyEntity.taxonomyWord }}
+                                    {% endfor %}
+									<span class="cl12 m-l-4 m-r-6">|</span>
+								</span>
+
+								<span>
+									{{ contentEntity.commentEntities|length }} 条评论
+								</span>
+							</span>
+
+                            <h4 class="ltext-109 cl2 p-b-28">
+                                {{ contentEntity.title }}
+                            </h4>
+                            {{ contentEntity.body|raw }}
+
+                        </div>
+
+                        <div class="flex-w flex-t p-t-16">
+							<span class="size-216 stext-116 cl8 p-t-4">
+								分类:
+							</span>
+                            <div class="flex-w size-217">
+                                {% for fieldTaxonomyTableEntity in contentEntity.fieldTaxonomyTableEntitys %}
+                                    <a href="{{ path('show_taxonomy_content_list', {id: fieldTaxonomyTableEntity.taxonomyEntity.id}) }}" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
+                                        {{ fieldTaxonomyTableEntity.taxonomyEntity.taxonomyWord }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!--  -->
+                        <div class="p-t-40">
+                            <h5 class="mtext-113 cl2 p-b-12">
+                                留个评论:
+                            </h5>
+                            {% for commentEntity in contentEntity.commentEntities %}
+                                <!-- Review -->
+                                <div class="flex-w flex-t p-b-68">
+                                    <div class="wrap-pic-s size-109 bor0 of-hidden m-r-18 m-t-6">
+                                        <img src="{{ commentEntity.author.avatar(40) }}" alt="AVATAR">
+                                    </div>
+
+                                    <div class="size-207">
+                                        <div class="flex-w flex-sb-m p-b-17">
+                                            <span class="mtext-107 cl2 p-r-20">
+                                                {{ commentEntity.author.username }}
+                                            </span>
+
+                                            {#<span class="fs-18 cl11">#}
+                                            {#<i class="zmdi zmdi-star"></i>#}
+                                            {#<i class="zmdi zmdi-star"></i>#}
+                                            {#<i class="zmdi zmdi-star"></i>#}
+                                            {#<i class="zmdi zmdi-star"></i>#}
+                                            {#<i class="zmdi zmdi-star-half"></i>#}
+                                            {#</span>#}
+                                        </div>
+
+                                        <p class="stext-102 cl6">
+                                            {{ commentEntity.commentBody|raw }}
+                                        </p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            {#{% for commentEntity in contentEntity.commentEntities %}#}
+                                {#<div class="comment-wrapper">#}
+                                    {#<article>#}
+                                        {#<p class="author-wrap">#}
+                                            {#<span class="author-img" style="background-image: url('{{ commentEntity.author.avatar(40) }}');"></span>#}
+                                            {#<span class="author">{{ commentEntity.author.username }}</span>#}
+                                            {#<span style="font-size: 12px;">{{ commentEntity.createAt|date('Y-m-d H:i:s') }}</span>#}
+                                        {#</p>#}
+                                        {#<p class="comment">{{ commentEntity.commentBody|raw }}</p>#}
+                                    {#</article>#}
+                                {#</div>#}
+                            {#{% endfor %}#}
+
+                            {% if app.user == null %}
+                                请 <a href="{{ path('fos_user_security_login') }}">登录</a> 后,发表评论. 还没有账号? <a href="{{ path('fos_user_registration_register') }}">注册一个</a>
+                            {% else %}
+                                您好:  {{ app.user.username }}
+                                {{ form_start(commentForm) }}
+                                {{ form_widget(commentForm) }}
+                                <button class="btn btn-primary">提交</button>
+                                {{ form_end(commentForm) }}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-lg-3 p-b-80">
+                    <div class="side-menu">
+                        <div class="bor17 of-hidden pos-relative">
+                            <input class="stext-103 cl2 plh4 size-116 p-l-28 p-r-55" type="text" name="search" placeholder="搜索文章">
+                            <button class="flex-c-m size-122 ab-t-r fs-18 cl4 hov-cl1 trans-04">
+                                <i class="zmdi zmdi-search"></i>
+                            </button>
+                        </div>
+
+                        <div class="p-t-55">
+                            <h4 class="mtext-112 cl2 p-b-33">
+                                分类词汇
+                            </h4>
+
+                            <ul>
+                                {% for taxonomyEntity in baseController.taxonomyEntities("tags") %}
+                                    <li class="bor18">
+                                        <a href="{{ path('show_taxonomy_content_list', {id: taxonomyEntity.id}) }}" class="dis-block stext-115 cl6 hov-cl1 trans-04 p-tb-8 p-lr-4">
+                                            {{ taxonomyEntity.taxonomyWord }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <div class="p-t-65">
+                            <h4 class="mtext-112 cl2 p-b-33">
+                                商品推荐
+                            </h4>
+
+                            <ul>
+                                {% for randomProduct in baseController.randomProducts(4) %}
+                                    <li class="flex-w flex-t p-b-30">
+                                        <a href="#" class="wrao-pic-w size-214 hov-ovelay1 m-r-20">
+                                            <img src="{{ asset(randomProduct.fieldImageTableEntitys[0].fileManagedEntity.uri) | imagine_filter('content_list_product_thumbnail') }}" alt="{{ randomProduct.title }}">
+                                        </a>
+
+                                        <div class="size-215 flex-col-t p-t-8">
+                                            <a href="#" class="stext-116 cl8 hov-cl1 trans-04">
+                                                {{ randomProduct.title }}
+                                            </a>
+
+                                            <span class="stext-116 cl6 p-t-20">
+											{% for fieldTableEntity in randomProduct.fieldTableEntitys %}
+                                                {% if "discount" in fieldTableEntity.fieldAliasInContentTypeEntity %}
+                                                    ¥:{{ fieldTableEntity.fieldTableValue }}
+                                                {% endif %}
+                                            {% endfor %}
+										</span>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        {#<div class="p-t-55">#}
+                        {#<h4 class="mtext-112 cl2 p-b-20">#}
+                        {#Archive#}
+                        {#</h4>#}
+
+                        {#<ul>#}
+                        {#<li class="p-b-7">#}
+                        {#<a href="#" class="flex-w flex-sb-m stext-115 cl6 hov-cl1 trans-04 p-tb-2">#}
+                        {#<span>#}
+                        {#July 2018#}
+                        {#</span>#}
+
+                        {#<span>#}
+                        {#(9)#}
+                        {#</span>#}
+                        {#</a>#}
+                        {#</li>#}
+
+                        {#<li class="p-b-7">#}
+                        {#<a href="#" class="flex-w flex-sb-m stext-115 cl6 hov-cl1 trans-04 p-tb-2">#}
+                        {#<span>#}
+                        {#June 2018#}
+                        {#</span>#}
+
+                        {#<span>#}
+                        {#(39)#}
+                        {#</span>#}
+                        {#</a>#}
+                        {#</li>#}
+
+                        {#<li class="p-b-7">#}
+                        {#<a href="#" class="flex-w flex-sb-m stext-115 cl6 hov-cl1 trans-04 p-tb-2">#}
+                        {#<span>#}
+                        {#May 2018#}
+                        {#</span>#}
+
+                        {#<span>#}
+                        {#(29)#}
+                        {#</span>#}
+                        {#</a>#}
+                        {#</li>#}
+
+                        {#<li class="p-b-7">#}
+                        {#<a href="#" class="flex-w flex-sb-m stext-115 cl6 hov-cl1 trans-04 p-tb-2">#}
+                        {#<span>#}
+                        {#April  2018#}
+                        {#</span>#}
+
+                        {#<span>#}
+                        {#(35)#}
+                        {#</span>#}
+                        {#</a>#}
+                        {#</li>#}
+
+                        {#<li class="p-b-7">#}
+                        {#<a href="#" class="flex-w flex-sb-m stext-115 cl6 hov-cl1 trans-04 p-tb-2">#}
+                        {#<span>#}
+                        {#March 2018#}
+                        {#</span>#}
+
+                        {#<span>#}
+                        {#(22)#}
+                        {#</span>#}
+                        {#</a>#}
+                        {#</li>#}
+
+                        {#<li class="p-b-7">#}
+                        {#<a href="#" class="flex-w flex-sb-m stext-115 cl6 hov-cl1 trans-04 p-tb-2">#}
+                        {#<span>#}
+                        {#February 2018#}
+                        {#</span>#}
+
+                        {#<span>#}
+                        {#(32)#}
+                        {#</span>#}
+                        {#</a>#}
+                        {#</li>#}
+
+                        {#<li class="p-b-7">#}
+                        {#<a href="#" class="flex-w flex-sb-m stext-115 cl6 hov-cl1 trans-04 p-tb-2">#}
+                        {#<span>#}
+                        {#January 2018#}
+                        {#</span>#}
+
+                        {#<span>#}
+                        {#(21)#}
+                        {#</span>#}
+                        {#</a>#}
+                        {#</li>#}
+
+                        {#<li class="p-b-7">#}
+                        {#<a href="#" class="flex-w flex-sb-m stext-115 cl6 hov-cl1 trans-04 p-tb-2">#}
+                        {#<span>#}
+                        {#December 2017#}
+                        {#</span>#}
+
+                        {#<span>#}
+                        {#(26)#}
+                        {#</span>#}
+                        {#</a>#}
+                        {#</li>#}
+                        {#</ul>#}
+                        {#</div>#}
+
+                        {#<div class="p-t-50">#}
+                        {#<h4 class="mtext-112 cl2 p-b-27">#}
+                        {#Tags#}
+                        {#</h4>#}
+
+                        {#<div class="flex-w m-r--5">#}
+                        {#<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">#}
+                        {#Fashion#}
+                        {#</a>#}
+
+                        {#<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">#}
+                        {#Lifestyle#}
+                        {#</a>#}
+
+                        {#<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">#}
+                        {#Denim#}
+                        {#</a>#}
+
+                        {#<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">#}
+                        {#Streetstyle#}
+                        {#</a>#}
+
+                        {#<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">#}
+                        {#Crafts#}
+                        {#</a>#}
+                        {#</div>#}
+                        {#</div>#}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    {% include 'themes/cozastore/footer.html.twig' %}
+{% endblock %}
+
+{% block base_javascripts %}
+    {{ parent() }}
+    {#当前页面得把页头MENU背景改为白色，用jquery修改吧#}
+    <script>
+        $(document).ready(function(){
+            $("header").addClass("header-v4");
+            $('.js-show-cart').on('click',function(e){
+                window.location.href= $(e.target).data("cart");
+            });
+        });
+    </script>
+{% endblock %}

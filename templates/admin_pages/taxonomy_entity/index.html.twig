@@ -1,0 +1,85 @@
+{% extends 'admin_pages/base.html.twig' %}
+
+{% block title %} 词汇列表页 {% endblock %}
+
+{% block subHeader %}
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">词汇列表页</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>分类词汇</th>
+                <th>词汇描述</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for taxonomy_entity in pagination %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ taxonomy_entity.taxonomyWord }}</td>
+                <td>{{ taxonomy_entity.taxonomyDesc }}</td>
+                <td>
+                {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                or app.user.userPermissionGroupEntity.permissionJson.taxonomyEntity[taxonomy_entity.taxonomyTypeEntity.taxonomyAlias].edit is defined %}
+                    <a href="{{ path('taxonomy_entity_edit_page', {'taxonomyEntity_Id': taxonomy_entity.id}) }}">编辑</a>
+                {% endif %}
+                {% if "ROLE_SUPER_ADMIN" in app.user.roles
+                or app.user.userPermissionGroupEntity.permissionJson.taxonomyEntity[taxonomy_entity.taxonomyTypeEntity.taxonomyAlias].delete is defined %}
+                    <a href="" data-toggle="modal" data-target="#deleteModal_{{ taxonomy_entity.id }}">删除</a>
+                {% endif %}
+                </td>
+            </tr>
+            <!-- 点删除按钮时弹出对话框提醒一下 -->
+            <div class="modal fade" id="deleteModal_{{ taxonomy_entity.id }}" tabindex="-1" role="dialog"
+                 aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">删除分类词汇 {{ taxonomy_entity.taxonomyWord }} ？</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            您将要删除：{{ taxonomy_entity.taxonomyWord }} 分类词汇,
+                            确定要这样做吗？
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                            <a href="{{ path('taxonomy_entity_delete_action', {'taxonomyEntity_Id': taxonomy_entity.id}) }} ">
+                                <button type="button" class="btn btn-primary" >确定</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <tr>
+                <td colspan="6">还没有任何分类词汇。</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {# display navigation #}
+    <div class="col-12">
+        <div class="navigation">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    </div>
+
+    {% if "ROLE_SUPER_ADMIN" in app.user.roles
+    or app.user.userPermissionGroupEntity.permissionJson.taxonomyEntity[taxonomyTypeEntity.taxonomyAlias].new is defined %}
+        <a href="{{ path('taxonomy_entity_new_page',{"taxonomyTypeEntity_Id":taxonomyTypeEntity_Id}) }}">添加分类词汇</a>
+    {% endif %}
+{% endblock %}

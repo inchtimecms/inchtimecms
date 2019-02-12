@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<html lang="{{ app.request.locale }}">
+
+<!-- begin::Head -->
+<head>
+    <meta charset="utf-8" />
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
+
+    <!--begin::Base Styles -->
+    {% block base_stylesheets %}
+        {% include 'admin_pages/base_stylesheets.html.twig' %}
+    {% endblock %}
+    <!--end::Base Styles -->
+
+    {% block custom_stylesheets %}
+        <link rel="stylesheet" href="{{ asset('assets/inchTimeCss/styles.css') }}" type="text/css"/>
+        <link rel="stylesheet" href="{{ asset('assets/summernote-0.8.9-dist/dist/summernote.css') }}" type="text/css"/>
+    {% endblock %}
+
+    <link rel="shortcut icon" href="{{ asset('assets/demo/default/media/img/logo/favicon.ico') }}" />
+
+</head>
+
+<!-- end::Head -->
+
+<!-- begin::Body -->
+<body class="{% block base_body_css %}m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--fixed m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default {% endblock %}">
+
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+
+    <!-- BEGIN: Header -->
+    {% block header %}
+        {% include 'admin_pages/header.html.twig' %}
+    {% endblock %}
+    <!-- END: Header -->
+
+    <!-- begin::Body -->
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+
+        <!-- BEGIN: Left Aside -->
+        {% block leftAside %}
+            {% include 'admin_pages/leftAside.html.twig' %}
+        {% endblock %}
+        <!-- END: Left Aside -->
+
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+
+            <!-- BEGIN: Subheader -->
+            {% block subHeader %}{% endblock %}
+            <!-- END: Subheader -->
+
+            <div class="m-content">
+                <div class="row">
+                    <!-- BEGIN: content -->
+                    {% block content %}{% endblock %}
+                    <!-- END: content -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- end:: Body -->
+
+    <!-- begin::Footer -->
+    {% block footer %}
+        {% include 'admin_pages/footer.html.twig' %}
+    {% endblock %}
+    <!-- end::Footer -->
+</div>
+
+<!-- end:: Page -->
+
+<!-- begin::Scroll Top -->
+<div id="m_scroll_top" class="m-scroll-top">
+    <i class="la la-arrow-up"></i>
+</div>
+
+<!-- end::Scroll Top -->
+
+
+<!--begin::Base Scripts -->
+{% block base_javascripts %}
+    {% include 'admin_pages/base_javascripts.html.twig' %}
+{% endblock %}
+<!--end::Base Scripts -->
+
+<!--begin::Page Snippets -->
+{% block snippets_javascripts %}
+    <script src="{{ asset('assets/app/js/dashboard.js') }}"></script>
+{% endblock %}
+<!--end::Page Snippets -->
+
+{% block custom_javascripts %}
+
+{% endblock %}
+
+</body>
+
+<!-- end::Body -->
+</html>
